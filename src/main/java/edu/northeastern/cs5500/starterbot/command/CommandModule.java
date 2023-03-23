@@ -15,6 +15,12 @@ public class CommandModule {
 
     @Provides
     @IntoSet
+    public SlashCommandHandler providePlayerInfoCommand(PlayerInfoCommand playerInfoCommand) {
+        return playerInfoCommand;
+    }
+
+    @Provides
+    @IntoSet
     public SlashCommandHandler providePreferredNameCommand(
             PreferredNameCommand preferredNameCommand) {
         return preferredNameCommand;
