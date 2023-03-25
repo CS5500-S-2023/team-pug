@@ -28,10 +28,22 @@ public class CommandModule {
 
     @Provides
     @IntoSet
+    public SlashCommandHandler provideSlotMachineCommand(SlotMachineCommand slotMachineCommand) {
+        return slotMachineCommand;
+    }
+  
+
+    @Provides
+    @IntoSet
     public ButtonHandler provideButtonCommandClickHandler(ButtonCommand buttonCommand) {
         return buttonCommand;
     }
 
+    @Provides
+    @IntoSet
+    public ButtonHandler provideSlotMachineClickHandler(SlotMachineCommand slotMachineCommand) {
+        return slotMachineCommand;
+    }
     @Provides
     @IntoSet
     public SlashCommandHandler provideDropdownCommand(DropdownCommand dropdownCommand) {
@@ -43,4 +55,6 @@ public class CommandModule {
     public StringSelectHandler provideDropdownCommandMenuHandler(DropdownCommand dropdownCommand) {
         return dropdownCommand;
     }
+
+
 }

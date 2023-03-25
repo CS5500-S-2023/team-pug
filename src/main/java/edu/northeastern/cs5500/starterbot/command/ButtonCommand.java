@@ -27,7 +27,7 @@ public class ButtonCommand implements SlashCommandHandler, ButtonHandler {
     @Override
     @Nonnull
     public CommandData getCommandData() {
-        return Commands.slash(getName(), "Demonstrate a button interaction");
+        return Commands.slash(getName(), "Demonstrate a button interactiodth");
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ButtonCommand implements SlashCommandHandler, ButtonHandler {
         messageCreateBuilder = messageCreateBuilder.setContent("Example buttons");
         event.reply(messageCreateBuilder.build()).queue();
     }
-
+    
     @Override
     public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
         event.reply(event.getButton().getLabel()).queue();

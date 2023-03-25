@@ -41,7 +41,6 @@ public class Bot {
         @Nonnull
         Collection<GatewayIntent> intents = EnumSet.noneOf(GatewayIntent.class);
         JDA jda = JDABuilder.createLight(token, intents).addEventListeners(messageListener).build();
-
         CommandListUpdateAction commands = jda.updateCommands();
         commands.addCommands(messageListener.allCommandData());
         commands.queue();
