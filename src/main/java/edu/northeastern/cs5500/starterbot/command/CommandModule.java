@@ -21,6 +21,12 @@ public class CommandModule {
 
     @Provides
     @IntoSet
+    public SlashCommandHandler provideSetNameCommand(SetUserNameCommand setUserNameCommand) {
+        return setUserNameCommand;
+    }
+
+    @Provides
+    @IntoSet
     public SlashCommandHandler providePreferredNameCommand(
             PreferredNameCommand preferredNameCommand) {
         return preferredNameCommand;

@@ -33,4 +33,15 @@ public class RepositoryModule {
     // public Class<UserPreference> provideUserPreference() {
     // return UserPreference.class;
     // }
+
+    // @Provides
+    // public GenericRepository<Player>
+    // providePlayerRepository(MongoDBRepository<Player> repository) {
+    // return repository;
+    // }
+
+    // @Provides
+    // public Class<Player> providePlayer() {
+    // return Player.class;
+    // }
 }

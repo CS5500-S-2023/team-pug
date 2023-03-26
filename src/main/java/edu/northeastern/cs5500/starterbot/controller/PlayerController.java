@@ -25,4 +25,11 @@ public class PlayerController {
         playerRepository.add(newPlayer);
         return newPlayer;
     }
+
+    public void setPlayerName(String discordUserId, String newName) {
+        Player player = getPlayer(discordUserId);
+        player.setUserName(newName);
+        player.setLastLoginTime();
+        playerRepository.update(player);
+    }
 }
