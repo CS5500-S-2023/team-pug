@@ -4,7 +4,7 @@ export BOT_TOKEN=$BOT_TOKEN
 export MONGODB_URI=$MONGODB_URI
 ./gradlew run
 ```
-$BOT_TOKEN can be found in [TOKEN](https://discord.com/developers/applications/)
+$BOT_TOKEN can be found in [TOKEN](https://discord.com/developers/applications/)\
 $MONGODB_URI is used when testing on mongodb
 ## Build
 
