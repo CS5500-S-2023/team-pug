@@ -42,7 +42,7 @@ public class DropdownCommand implements SlashCommandHandler, StringSelectHandler
                         .addOption("Arcane Mage", "mage-arcane")
                         .addOption("Fire Mage", "mage-fire")
                         .addOption("Frost Mage", "mage-frost")
-                        .addOption("dsds","dasdsd")
+                        .addOption("dsds", "dasdsd")
                         .build();
         event.reply("Please pick your class below").setEphemeral(true).addActionRow(menu).queue();
     }
