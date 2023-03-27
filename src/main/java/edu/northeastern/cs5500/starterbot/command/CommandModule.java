@@ -43,7 +43,6 @@ public class CommandModule {
     public SlashCommandHandler provideSlotMachineCommand(SlotMachineCommand slotMachineCommand) {
         return slotMachineCommand;
     }
-  
 
     @Provides
     @IntoSet
@@ -56,6 +55,7 @@ public class CommandModule {
     public ButtonHandler provideSlotMachineClickHandler(SlotMachineCommand slotMachineCommand) {
         return slotMachineCommand;
     }
+
     @Provides
     @IntoSet
     public SlashCommandHandler provideDropdownCommand(DropdownCommand dropdownCommand) {
@@ -67,6 +67,4 @@ public class CommandModule {
     public StringSelectHandler provideDropdownCommandMenuHandler(DropdownCommand dropdownCommand) {
         return dropdownCommand;
     }
-
-
 }
