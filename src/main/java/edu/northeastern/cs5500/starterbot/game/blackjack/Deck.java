@@ -4,10 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.inject.Inject;
+
+import lombok.Data;
+
+@Data
 public class Deck {
     private List<Card> cards;
     private Random random;
-
+    @Inject
     public Deck() {
         this.cards = new ArrayList<>();
         for (Suit suit : Suit.values()) {

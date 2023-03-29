@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class Card {
-    Rank rank;
-    Suit suit;
+    private Rank rank;
+    private Suit suit;
 
     public Card(Rank rank, Suit suit) {
         this.rank = rank;

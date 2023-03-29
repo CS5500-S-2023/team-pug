@@ -42,8 +42,7 @@ public abstract class Game<T extends Player> {
         setup();
         while (true) {
             loadWaitlist();
-            if (players.isEmpty())
-                break;
+            if (players.isEmpty()) break;
             if (players.size() >= minPlayers) {
                 // start play
                 playRound();
@@ -53,8 +52,7 @@ public abstract class Game<T extends Player> {
     }
 
     // hook, used when need setup
-    public void setup() {
-    }
+    public void setup() {}
 
     public abstract void playRound();
 
