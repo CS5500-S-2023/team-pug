@@ -20,5 +20,4 @@ public class GameModule {
     public ButtonHandler provideSlotMachineClickHandler(SlotMachine slotMachine) {
         return slotMachine;
     }
-
 }

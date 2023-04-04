@@ -1,13 +1,12 @@
 package edu.northeastern.cs5500.starterbot.game;
 
+import edu.northeastern.cs5500.starterbot.command.ButtonHandler;
+import edu.northeastern.cs5500.starterbot.command.SlashCommandHandler;
 import java.util.HashMap;
 import java.util.Random;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import edu.northeastern.cs5500.starterbot.command.ButtonHandler;
-import edu.northeastern.cs5500.starterbot.command.SlashCommandHandler;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -18,7 +17,7 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 
 @Singleton
 @Slf4j
-public class SlotMachine implements SlashCommandHandler, ButtonHandler{
+public class SlotMachine implements SlashCommandHandler, ButtonHandler {
     // Define the symbols and their payouts
     private static final HashMap<String, Integer> SYMBOLS =
             new HashMap<String, Integer>() {
