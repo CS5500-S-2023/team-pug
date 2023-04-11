@@ -20,8 +20,7 @@ public class PlayerController {
                 return player;
             }
         }
-        Player newPlayer = new Player();
-        newPlayer.initPlayer(discordUserId);
+        Player newPlayer = new Player(discordUserId);
         playerRepository.add(newPlayer);
         return newPlayer;
     }
@@ -31,5 +30,12 @@ public class PlayerController {
         player.setUserName(newName);
         player.setLastLoginTime();
         playerRepository.update(player);
+    }
+
+    public void updateBalance(String discordUserId, Double amount) {
+        Player player = getPlayer(discordUserId);
+        Double balance = player.getBalance();
+        balance += amount;
+        player.setBalance(balance);
     }
 }

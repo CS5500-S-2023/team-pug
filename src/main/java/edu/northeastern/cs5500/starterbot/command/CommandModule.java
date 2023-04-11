@@ -55,4 +55,22 @@ public class CommandModule {
     public StringSelectHandler provideDropdownCommandMenuHandler(DropdownCommand dropdownCommand) {
         return dropdownCommand;
     }
+
+    @Provides
+    @IntoSet
+    public SlashCommandHandler provideGameSlashCommand(GameCommand gameCommand) {
+        return gameCommand;
+    }
+
+    @Provides
+    @IntoSet
+    public ButtonHandler provideGameButtonCommand(GameCommand gameCommand) {
+        return gameCommand;
+    }
+
+    @Provides
+    @IntoSet
+    public ButtonHandler provideBlackjackCommand(BlackjackCommand blackjackCommand) {
+        return blackjackCommand;
+    }
 }
