@@ -14,14 +14,14 @@ public class Player implements Model {
     BigDecimal balance;
     String lastLoginTime;
 
-    public void setLastLoginTime() {
-        lastLoginTime = new SimpleDateFormat("yyyy.MM.dd.HH.mm").format(new Date());
-    }
-
-    public void initPlayer(String discordUserId) {
+    public Player(String discordUserId) {
         this.discordUserId = discordUserId;
         userName = "Anonymous";
         balance = BigDecimal.ZERO;
         setLastLoginTime();
+    }
+
+    public void setLastLoginTime() {
+        lastLoginTime = new SimpleDateFormat("yyyy.MM.dd.HH.mm").format(new Date());
     }
 }

@@ -1,25 +1,22 @@
 package edu.northeastern.cs5500.starterbot.game.blackjack;
 
-import javax.inject.Inject;
-
-import edu.northeastern.cs5500.starterbot.model.Player;
+import edu.northeastern.cs5500.starterbot.game.IPlayer;
 import lombok.Data;
+import net.dv8tion.jda.api.entities.User;
 
 @Data
-public abstract class BlackjackPlayer extends Player {
+public abstract class BlackjackPlayer implements IPlayer {
     private Hand hand;
+    private User user;
     private double bet;
     private boolean stop;
 
-    protected BlackjackPlayer(Hand hand) {
-        this.hand = hand;
+    protected BlackjackPlayer(User user) {
+        this.user = user;
+        hand = new Hand();
         bet = 0;
         stop = false;
     }
-
-    public abstract boolean canPlay();
-
-    public abstract boolean wantPlay();
 
     public void addCard(Card card) {
         hand.addCard(card);

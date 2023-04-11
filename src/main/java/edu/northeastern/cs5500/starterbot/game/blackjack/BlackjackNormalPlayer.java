@@ -1,11 +1,10 @@
 package edu.northeastern.cs5500.starterbot.game.blackjack;
 
-import javax.inject.Inject;
+import net.dv8tion.jda.api.entities.User;
 
 public class BlackjackNormalPlayer extends BlackjackPlayer {
-    @Inject
-    public BlackjackNormalPlayer(Hand hand) {
-        super(hand);
+    public BlackjackNormalPlayer(User user) {
+        super(user);
     }
 
     @Override

@@ -2,6 +2,7 @@ package edu.northeastern.cs5500.starterbot.repository;
 
 import dagger.Module;
 import dagger.Provides;
+import edu.northeastern.cs5500.starterbot.game.blackjack.BlackjackGame;
 import edu.northeastern.cs5500.starterbot.model.Player;
 import edu.northeastern.cs5500.starterbot.model.UserPreference;
 
@@ -23,6 +24,11 @@ public class RepositoryModule {
         return repository;
     }
 
+    @Provides
+    public GenericRepository<BlackjackGame> provideBlackjackRepository(
+            InMemoryRepository<BlackjackGame> repository) {
+        return repository;
+    }
     // @Provides
     // public GenericRepository<UserPreference> provideUserPreferencesRepository(
     // MongoDBRepository<UserPreference> repository) {

@@ -2,18 +2,16 @@ package edu.northeastern.cs5500.starterbot.game.blackjack;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
-
 import lombok.Data;
 
 @Data
 public class Hand {
     private List<Card> cards;
-    @Inject
-    public Hand(){
+
+    public Hand() {
         cards = new ArrayList<>();
-    } 
+    }
+
     public int getCurrentValue() {
         int value = 0;
         int numAces = 0;

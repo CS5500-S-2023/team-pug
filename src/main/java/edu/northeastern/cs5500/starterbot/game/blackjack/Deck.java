@@ -3,16 +3,13 @@ package edu.northeastern.cs5500.starterbot.game.blackjack;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import javax.inject.Inject;
-
 import lombok.Data;
 
 @Data
 public class Deck {
     private List<Card> cards;
     private Random random;
-    @Inject
+
     public Deck() {
         this.cards = new ArrayList<>();
         for (Suit suit : Suit.values()) {
@@ -34,6 +31,11 @@ public class Deck {
 
     public Card deal() {
         return this.cards.remove(0);
+    }
+
+    public Card shuffleDeal() {
+        shuffle();
+        return deal();
     }
 
     public boolean isEmpty() {

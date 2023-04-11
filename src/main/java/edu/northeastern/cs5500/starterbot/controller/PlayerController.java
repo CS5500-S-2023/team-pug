@@ -20,8 +20,7 @@ public class PlayerController {
                 return player;
             }
         }
-        Player newPlayer = new Player();
-        newPlayer.initPlayer(discordUserId);
+        Player newPlayer = new Player(discordUserId);
         playerRepository.add(newPlayer);
         return newPlayer;
     }
