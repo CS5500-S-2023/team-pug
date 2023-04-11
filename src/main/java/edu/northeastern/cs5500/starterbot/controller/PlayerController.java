@@ -31,4 +31,11 @@ public class PlayerController {
         player.setLastLoginTime();
         playerRepository.update(player);
     }
+
+    public void updateBalance(String discordUserId, Double amount) {
+        Player player = getPlayer(discordUserId);
+        Double balance = player.getBalance();
+        balance += amount;
+        player.setBalance(balance);
+    }
 }

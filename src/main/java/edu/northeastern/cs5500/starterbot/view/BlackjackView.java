@@ -2,7 +2,9 @@ package edu.northeastern.cs5500.starterbot.view;
 
 import static edu.northeastern.cs5500.starterbot.util.Constant.BLACKJACK_GAME_NAME;
 
+import edu.northeastern.cs5500.starterbot.game.blackjack.Result;
 import java.awt.Color;
+import java.util.List;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -33,5 +35,14 @@ public class BlackjackView {
         return new MessageCreateBuilder()
                 .addEmbeds(embedBuilder.build())
                 .addActionRow(hit, stand, doubleDown, surrender, showCard);
+    }
+
+    public static MessageCreateBuilder createBlackjackResultMessageBuilder(List<Result> results) {
+        EmbedBuilder embedBuilder = new EmbedBuilder().setTitle(BLACKJACK_GAME_NAME + " Result");
+        for (Result result : results) {
+            embedBuilder.addField(result.getUser().getName(), result.getBet().toString(), true);
+        }
+
+        return new MessageCreateBuilder().addEmbeds(embedBuilder.build());
     }
 }

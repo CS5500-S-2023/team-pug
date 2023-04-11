@@ -14,6 +14,6 @@ public class BlackjackNormalPlayer extends BlackjackPlayer {
 
     @Override
     public boolean wantPlay() {
-        return isStop();
+        return !isStop();
     }
 }

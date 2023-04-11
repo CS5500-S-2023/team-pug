@@ -2,6 +2,8 @@ package edu.northeastern.cs5500.starterbot.game.blackjack;
 
 import edu.northeastern.cs5500.starterbot.game.Config;
 import edu.northeastern.cs5500.starterbot.game.Game;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Data;
 
 @Data
@@ -34,38 +36,54 @@ public class BlackjackGame extends Game<BlackjackPlayer> {
         getCurrentPlayer().setStop(true);
     }
 
-    public void shareDealerBets() {
-        // bets from the deal will be shared equally
-        int count = 0;
+    public List<Result> shareDealerBets() {
+        double sharedTotalBets = dealer.getBet();
+        double winnerTotalBets = 0;
         for (BlackjackPlayer player : players) {
-
-            if (player.canPlay()) count++;
+            if (player.canPlay()) {
+                winnerTotalBets += player.getBet();
+            } else {
+                sharedTotalBets += player.getBet();
+            }
         }
-        double sharedBets = dealer.getBet() / count;
+        List<Result> gameResults = new ArrayList<>();
         for (BlackjackPlayer player : players) {
-            // TODO player.update_balance(shardBets)
+            if (player.canPlay()) {
+                gameResults.add(
+                        new Result(
+                                player.getUser(),
+                                player.getBet() / winnerTotalBets * sharedTotalBets));
+            } else {
+                gameResults.add(new Result(player.getUser(), -player.getBet()));
+            }
         }
+        return gameResults;
     }
 
-    public void shareAllBets() {
-        double allbets = players.stream().mapToDouble(i -> i.getBet()).sum();
+    public List<Result> shareAllBets() {
+        double sharedTotalBets = 0;
+        double winnerTotalBets = 0;
         int maxValue = 0;
         for (BlackjackPlayer player : players) {
             if (!player.getHand().isBust())
                 maxValue = Math.max(maxValue, player.getHand().getCurrentValue());
         }
-        int count = 0;
         for (BlackjackPlayer player : players) {
-            if (player.getHand().getCurrentValue() != maxValue) {
-                // lose its bet
-            } else count++;
+            if (player.getHand().getCurrentValue() != maxValue) sharedTotalBets += player.getBet();
+            else winnerTotalBets += player.getBet();
         }
-        double sharedBets = allbets / count;
+        List<Result> gameResults = new ArrayList<>();
         for (BlackjackPlayer player : players) {
             if (player.getHand().getCurrentValue() == maxValue) {
-                // TODO add sharedBets
+                gameResults.add(
+                        new Result(
+                                player.getUser(),
+                                player.getBet() / winnerTotalBets * sharedTotalBets));
+            } else {
+                gameResults.add(new Result(player.getUser(), -player.getBet()));
             }
         }
+        return gameResults;
     }
 
     // remove all the player to end the game.

@@ -45,6 +45,6 @@ public class PlayerInfoCommand implements SlashCommandHandler {
                             player.getBalance().toString(),
                             player.getLastLoginTime()
                         });
-        event.reply(output).queue();
+        event.reply(output).setEphemeral(true).queue();
     }
 }

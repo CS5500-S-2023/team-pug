@@ -5,9 +5,11 @@ import edu.northeastern.cs5500.starterbot.game.blackjack.BlackjackGame;
 import edu.northeastern.cs5500.starterbot.game.blackjack.BlackjackNormalPlayer;
 import edu.northeastern.cs5500.starterbot.game.blackjack.BlackjackPlayer;
 import edu.northeastern.cs5500.starterbot.game.blackjack.Card;
+import edu.northeastern.cs5500.starterbot.game.blackjack.Result;
 import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
 import edu.northeastern.cs5500.starterbot.view.BlackjackView;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -19,16 +21,21 @@ import org.bson.types.ObjectId;
 /** Connect with blackjack game and UI */
 public class BlackjackController {
     private GenericRepository<BlackjackGame> blackjackRepository;
+    private PlayerController playerController;
 
     @Inject
-    public BlackjackController(GenericRepository<BlackjackGame> blackjackRepository) {
+    public BlackjackController(
+            GenericRepository<BlackjackGame> blackjackRepository,
+            PlayerController playerController) {
         this.blackjackRepository = blackjackRepository;
+        this.playerController = playerController;
     }
 
     public ObjectId newGame(int min, int max, User holder) {
-        BlackjackGame blackjackGame = new BlackjackGame(
-                new Config("BLACKJACK_GAME_NAME", min, max),
-                new BlackjackNormalPlayer(holder));
+        BlackjackGame blackjackGame =
+                new BlackjackGame(
+                        new Config("BLACKJACK_GAME_NAME", min, max),
+                        new BlackjackNormalPlayer(holder));
         blackjackRepository.add(blackjackGame);
         return blackjackGame.getId();
     }
@@ -63,8 +70,7 @@ public class BlackjackController {
     private BlackjackGame getGameFromObjectId(ObjectId id) {
         Collection<BlackjackGame> collection = blackjackRepository.getAll();
         for (BlackjackGame blackjackGame : collection) {
-            if (blackjackGame.getId().equals(id))
-                return blackjackGame;
+            if (blackjackGame.getId().equals(id)) return blackjackGame;
         }
         return null;
     }
@@ -108,9 +114,10 @@ public class BlackjackController {
             // scan all the player to see if is bust
             if (blackjackGame.getDealer().getHand().isBust()) {
                 // dealer lose
-                blackjackGame.shareDealerBets();
-                // blackjackGame.removeAllplayers();
-                sendMessage(event, "Game end!!!");
+                List<Result> results = blackjackGame.shareDealerBets();
+                updateBalance(results);
+                sendMessage(
+                        event, BlackjackView.createBlackjackResultMessageBuilder(results).build());
                 return;
             }
             int continuePlayerSize = 0;
@@ -121,9 +128,11 @@ public class BlackjackController {
             }
             if (continuePlayerSize < blackjackGame.getConfig().getMinPlayers()) {
                 // one player win
-                blackjackGame.shareAllBets();
+                List<Result> results = blackjackGame.shareAllBets();
+                updateBalance(results);
                 // blackjackGame.removeAllplayers();
-                sendMessage(event, "Game end!!!");
+                sendMessage(
+                        event, BlackjackView.createBlackjackResultMessageBuilder(results).build());
                 return;
             }
             // continue
@@ -161,5 +170,13 @@ public class BlackjackController {
     private void sendMessage(
             @Nonnull ButtonInteractionEvent event, @Nonnull MessageCreateData messageCreateData) {
         event.reply(messageCreateData).queue();
+    }
+
+    private void updateBalance(List<Result> results) {
+        for (Result result : results) {
+            String discordId = result.getUser().getId();
+            Double amount = result.getBet();
+            playerController.updateBalance(discordId, amount);
+        }
     }
 }

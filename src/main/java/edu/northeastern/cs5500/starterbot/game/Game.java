@@ -56,7 +56,7 @@ public abstract class Game<T extends IPlayer> implements Model {
     public T nextPlayer() {
         currentIndex = (currentIndex + 1) % players.size();
         while (!players.get(currentIndex).canPlay() || !players.get(currentIndex).wantPlay())
-            currentIndex++;
+            currentIndex = (currentIndex + 1) % players.size();
         return players.get(currentIndex);
     }
 
