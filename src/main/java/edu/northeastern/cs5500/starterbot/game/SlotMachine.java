@@ -1,5 +1,7 @@
-package edu.northeastern.cs5500.starterbot.command;
+package edu.northeastern.cs5500.starterbot.game;
 
+import edu.northeastern.cs5500.starterbot.command.ButtonHandler;
+import edu.northeastern.cs5500.starterbot.command.SlashCommandHandler;
 import java.util.HashMap;
 import java.util.Random;
 import javax.annotation.Nonnull;
@@ -15,7 +17,7 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 
 @Singleton
 @Slf4j
-public class SlotMachineCommand implements SlashCommandHandler, ButtonHandler {
+public class SlotMachine implements SlashCommandHandler, ButtonHandler {
     // Define the symbols and their payouts
     private static final HashMap<String, Integer> SYMBOLS =
             new HashMap<String, Integer>() {
@@ -33,7 +35,7 @@ public class SlotMachineCommand implements SlashCommandHandler, ButtonHandler {
             };
 
     @Inject
-    public SlotMachineCommand() {}
+    public SlotMachine() {}
 
     @Override
     @Nonnull
@@ -55,7 +57,7 @@ public class SlotMachineCommand implements SlashCommandHandler, ButtonHandler {
                 messageCreateBuilder.addActionRow(
                         Button.primary(this.getName() + ":start", "Start"),
                         Button.danger(this.getName() + ":cancel", "Cancel"));
-        messageCreateBuilder = messageCreateBuilder.setContent("Do want to start?");
+        messageCreateBuilder = messageCreateBuilder.setContent("Do you want to start?");
         event.reply(messageCreateBuilder.build()).setEphemeral(true).queue();
     }
 

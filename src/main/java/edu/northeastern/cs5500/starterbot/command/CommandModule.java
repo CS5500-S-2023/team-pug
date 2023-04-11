@@ -40,20 +40,8 @@ public class CommandModule {
 
     @Provides
     @IntoSet
-    public SlashCommandHandler provideSlotMachineCommand(SlotMachineCommand slotMachineCommand) {
-        return slotMachineCommand;
-    }
-
-    @Provides
-    @IntoSet
     public ButtonHandler provideButtonCommandClickHandler(ButtonCommand buttonCommand) {
         return buttonCommand;
-    }
-
-    @Provides
-    @IntoSet
-    public ButtonHandler provideSlotMachineClickHandler(SlotMachineCommand slotMachineCommand) {
-        return slotMachineCommand;
     }
 
     @Provides
