@@ -51,7 +51,6 @@ public abstract class Game<T extends IPlayer> implements Model {
         }
         return tempIndex == players.size();
     }
-    ;
 
     public T nextPlayer() {
         currentIndex = (currentIndex + 1) % players.size();
