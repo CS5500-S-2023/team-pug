@@ -102,8 +102,7 @@ public class BlackjackController {
         }
         // move to the next player
         if (!blackjackGame.isEndOfRound()) {
-            blackjackGame.nextPlayer();
-            BlackjackPlayer blackjackPlayer = blackjackGame.getCurrentPlayer();
+            BlackjackPlayer blackjackPlayer = blackjackGame.nextPlayer();
             sendMessage(
                     event,
                     BlackjackView.createBlackjackMessageBuilder(blackjackPlayer.getUser(), gameId)
@@ -111,13 +110,13 @@ public class BlackjackController {
         } else {
             // check if need to end the game
             System.out.println("End of Round");
-            // scan all the player to see if is bust
             if (blackjackGame.getDealer().getHand().isBust()) {
                 // dealer lose
                 List<Result> results = blackjackGame.shareDealerBets();
                 updateBalance(results);
                 sendMessage(
                         event, BlackjackView.createBlackjackResultMessageBuilder(results).build());
+                blackjackRepository.delete(blackjackGame.getId());
                 return;
             }
             int continuePlayerSize = 0;
@@ -133,11 +132,11 @@ public class BlackjackController {
                 // blackjackGame.removeAllplayers();
                 sendMessage(
                         event, BlackjackView.createBlackjackResultMessageBuilder(results).build());
+                blackjackRepository.delete(blackjackGame.getId());
                 return;
             }
             // continue
-            blackjackGame.nextPlayer();
-            BlackjackPlayer blackjackPlayer = blackjackGame.getCurrentPlayer();
+            BlackjackPlayer blackjackPlayer = blackjackGame.nextPlayer();
             sendMessage(
                     event,
                     BlackjackView.createBlackjackMessageBuilder(blackjackPlayer.getUser(), gameId)
@@ -178,5 +177,9 @@ public class BlackjackController {
             Double amount = result.getBet();
             playerController.updateBalance(discordId, amount);
         }
+    }
+
+    public boolean containsGameId(ObjectId id) {
+        return blackjackRepository.contains(id);
     }
 }

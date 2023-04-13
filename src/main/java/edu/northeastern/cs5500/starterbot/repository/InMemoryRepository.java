@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.bson.types.ObjectId;
+import org.jetbrains.annotations.NotNull;
 
 @Singleton
 public class InMemoryRepository<T extends Model> implements GenericRepository<T> {
@@ -54,5 +55,10 @@ public class InMemoryRepository<T extends Model> implements GenericRepository<T>
     @Override
     public long count() {
         return collection.size();
+    }
+
+    @Override
+    public boolean contains(@NotNull ObjectId id) {
+        return collection.containsKey(id);
     }
 }

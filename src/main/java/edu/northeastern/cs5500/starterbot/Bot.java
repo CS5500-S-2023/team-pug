@@ -2,7 +2,6 @@ package edu.northeastern.cs5500.starterbot;
 
 import dagger.Component;
 import edu.northeastern.cs5500.starterbot.command.CommandModule;
-import edu.northeastern.cs5500.starterbot.game.GameModule;
 import edu.northeastern.cs5500.starterbot.listener.MessageListener;
 import edu.northeastern.cs5500.starterbot.repository.RepositoryModule;
 import java.util.Collection;
@@ -15,7 +14,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
-@Component(modules = {CommandModule.class, GameModule.class, RepositoryModule.class})
+@Component(modules = {CommandModule.class, RepositoryModule.class})
 @Singleton
 interface BotComponent {
     public Bot bot();
