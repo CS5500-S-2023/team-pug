@@ -26,6 +26,11 @@ public class BlackjackCommand implements ButtonHandler {
         String action = event.getButton().getLabel();
         String targetUserId = event.getButton().getId().split(":")[3];
         ObjectId id = new ObjectId(event.getButton().getId().split(":")[2]);
+        // when the game finished it will reply some message
+        if (!blackjackController.containsGameId(id)) {
+            event.reply("The game has already finished...").setEphemeral(true).queue();
+            return;
+        }
         if (event.getUser().getId().equals(targetUserId)) {
             blackjackController.handlePlayerAction(id, action, event);
         } else {

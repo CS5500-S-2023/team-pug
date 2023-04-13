@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import org.bson.types.ObjectId;
+import org.jetbrains.annotations.NotNull;
 
 public class MongoDBRepository<T extends Model> implements GenericRepository<T> {
 
@@ -57,5 +58,10 @@ public class MongoDBRepository<T extends Model> implements GenericRepository<T> 
     @Override
     public long count() {
         return collection.countDocuments();
+    }
+
+    @Override
+    public boolean contains(@NotNull ObjectId id) {
+        return collection.countDocuments(eq(MONGODB_ID_FIELD, id)) > 0;
     }
 }

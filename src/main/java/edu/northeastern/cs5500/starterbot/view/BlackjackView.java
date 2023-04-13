@@ -9,9 +9,11 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import org.bson.types.ObjectId;
 
 public class BlackjackView {
-    public static MessageCreateBuilder createBlackjackMessageBuilder(User user, Object gameId) {
+
+    public static MessageCreateBuilder createBlackjackMessageBuilder(User user, ObjectId gameId) {
         String id = gameId.toString();
         String userId = user.getId();
         EmbedBuilder embedBuilder =
