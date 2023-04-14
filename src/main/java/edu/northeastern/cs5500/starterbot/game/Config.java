@@ -13,4 +13,10 @@ public class Config {
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
     }
+
+    public Config(String name) {
+        this.name = name;
+        minPlayers = 1;
+        maxPlayers = 1;
+    }
 }

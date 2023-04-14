@@ -1,13 +1,13 @@
 package edu.northeastern.cs5500.starterbot.game.blackjack;
 
 import edu.northeastern.cs5500.starterbot.game.Config;
-import edu.northeastern.cs5500.starterbot.game.Game;
+import edu.northeastern.cs5500.starterbot.game.MuiltiplePlayerGame;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
 
 @Data
-public class BlackjackGame extends Game<BlackjackPlayer> {
+public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
     private Deck deck;
     private BlackjackDealer dealer;
 
