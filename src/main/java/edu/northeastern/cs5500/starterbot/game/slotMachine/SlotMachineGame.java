@@ -4,11 +4,9 @@ import static edu.northeastern.cs5500.starterbot.game.slotMachine.Symbols.SYMBOL
 
 import edu.northeastern.cs5500.starterbot.game.Config;
 import edu.northeastern.cs5500.starterbot.game.IndividualGame;
-import edu.northeastern.cs5500.starterbot.game.blackjack.Result;
 import java.util.Random;
 import javax.annotation.Nonnull;
 import lombok.Data;
-import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.internal.utils.tuple.Pair;
 

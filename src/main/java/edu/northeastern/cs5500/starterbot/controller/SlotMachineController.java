@@ -7,15 +7,12 @@ import edu.northeastern.cs5500.starterbot.game.slotMachine.SlotMachinePlayer;
 import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
 import edu.northeastern.cs5500.starterbot.view.SlotMachineView;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
-import net.dv8tion.jda.api.utils.messages.MessageEditData;
 import net.dv8tion.jda.internal.utils.tuple.Pair;
 import org.bson.types.ObjectId;
 
@@ -85,55 +82,61 @@ public class SlotMachineController {
                 double payout = playResult.getRight();
                 updateBalance(new Result(currentPlayer.getUser(), payout));
 
-                event.reply(String.format("%s %s %s\nPayout: %f", reels[0], reels[1], reels[2], payout))
-                    .setEphemeral(true)
-                    .queue();
+                event.reply(
+                                String.format(
+                                        "%s %s %s\nPayout: %f",
+                                        reels[0], reels[1], reels[2], payout))
+                        .setEphemeral(true)
+                        .queue();
 
                 event.getHook()
-                    .sendMessage(SlotMachineView.createSlotMachineMessageBuilder(currentPlayer.getUser(), gameId)
-                            .build())
-                    .setEphemeral(true)
-                    .queue();
+                        .sendMessage(
+                                SlotMachineView.createSlotMachineMessageBuilder(
+                                                currentPlayer.getUser(), gameId)
+                                        .build())
+                        .setEphemeral(true)
+                        .queue();
             }
             case "END" -> {
                 slotMachineRepository.delete(slotMachineGame.getId());
                 sendMessage(
-                    event,
-                    SlotMachineView.createSlotMachineResultMessageBuilder(
-                            currentPlayer.getUser(),
-                            playerController
-                                .getPlayer(currentPlayer.getUser().getId())
-                                .getBalance())
-                        .build());
+                        event,
+                        SlotMachineView.createSlotMachineResultMessageBuilder(
+                                        currentPlayer.getUser(),
+                                        playerController
+                                                .getPlayer(currentPlayer.getUser().getId())
+                                                .getBalance())
+                                .build());
             }
         }
-//        switch (action) {
-//            case "PLAY" -> {
-//                Result result = slotMachineGame.play(event.getChannel());
-//                updateBalance(result);
-//                break;
-//            }
-//            case "END" -> {
-//                slotMachineRepository.delete(slotMachineGame.getId());
-//                break;
-//            }
-//        }
-//
-//        if (containsGameId(slotMachineGame.getId())) {
-//            sendMessage(
-//                    event,
-//                    SlotMachineView.createSlotMachineMessageBuilder(currentPlayer.getUser(), gameId)
-//                            .build());
-//        } else {
-//            sendMessage(
-//                    event,
-//                    SlotMachineView.createSlotMachineResultMessageBuilder(
-//                                    currentPlayer.getUser(),
-//                                    playerController
-//                                            .getPlayer(currentPlayer.getUser().getId())
-//                                            .getBalance())
-//                            .build());
-//        }
+        //        switch (action) {
+        //            case "PLAY" -> {
+        //                Result result = slotMachineGame.play(event.getChannel());
+        //                updateBalance(result);
+        //                break;
+        //            }
+        //            case "END" -> {
+        //                slotMachineRepository.delete(slotMachineGame.getId());
+        //                break;
+        //            }
+        //        }
+        //
+        //        if (containsGameId(slotMachineGame.getId())) {
+        //            sendMessage(
+        //                    event,
+        //
+        // SlotMachineView.createSlotMachineMessageBuilder(currentPlayer.getUser(), gameId)
+        //                            .build());
+        //        } else {
+        //            sendMessage(
+        //                    event,
+        //                    SlotMachineView.createSlotMachineResultMessageBuilder(
+        //                                    currentPlayer.getUser(),
+        //                                    playerController
+        //                                            .getPlayer(currentPlayer.getUser().getId())
+        //                                            .getBalance())
+        //                            .build());
+        //        }
     }
 
     public boolean containsGameId(ObjectId id) {

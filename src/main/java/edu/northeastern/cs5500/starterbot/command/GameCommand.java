@@ -66,7 +66,6 @@ public class GameCommand implements SlashCommandHandler, ButtonHandler {
             // For other games, reply in the public channel
             event.reply(createStartGameMessageBuilder(event).build()).queue();
         }
-
     }
 
     @Override
