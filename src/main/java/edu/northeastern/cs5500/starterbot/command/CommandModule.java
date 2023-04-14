@@ -77,8 +77,8 @@ public class CommandModule {
 
     @Provides
     @IntoSet
-    public SlashCommandHandler provideSlotMachineCommand(SlotMachine slotMachine) {
-        return slotMachine;
+    public ButtonHandler provideSlotMachineCommand(SlotMachineCommand slotMachineCommand) {
+        return slotMachineCommand;
     }
 
     @Provides
