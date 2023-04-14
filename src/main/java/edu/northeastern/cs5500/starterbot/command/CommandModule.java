@@ -3,7 +3,6 @@ package edu.northeastern.cs5500.starterbot.command;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoSet;
-import edu.northeastern.cs5500.starterbot.game.SlotMachine;
 
 @Module
 public class CommandModule {
@@ -79,11 +78,5 @@ public class CommandModule {
     @IntoSet
     public ButtonHandler provideSlotMachineCommand(SlotMachineCommand slotMachineCommand) {
         return slotMachineCommand;
-    }
-
-    @Provides
-    @IntoSet
-    public ButtonHandler provideSlotMachineClickHandler(SlotMachine slotMachine) {
-        return slotMachine;
     }
 }

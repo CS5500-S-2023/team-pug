@@ -109,34 +109,6 @@ public class SlotMachineController {
                                 .build());
             }
         }
-        //        switch (action) {
-        //            case "PLAY" -> {
-        //                Result result = slotMachineGame.play(event.getChannel());
-        //                updateBalance(result);
-        //                break;
-        //            }
-        //            case "END" -> {
-        //                slotMachineRepository.delete(slotMachineGame.getId());
-        //                break;
-        //            }
-        //        }
-        //
-        //        if (containsGameId(slotMachineGame.getId())) {
-        //            sendMessage(
-        //                    event,
-        //
-        // SlotMachineView.createSlotMachineMessageBuilder(currentPlayer.getUser(), gameId)
-        //                            .build());
-        //        } else {
-        //            sendMessage(
-        //                    event,
-        //                    SlotMachineView.createSlotMachineResultMessageBuilder(
-        //                                    currentPlayer.getUser(),
-        //                                    playerController
-        //                                            .getPlayer(currentPlayer.getUser().getId())
-        //                                            .getBalance())
-        //                            .build());
-        //        }
     }
 
     public boolean containsGameId(ObjectId id) {
