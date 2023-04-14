@@ -21,7 +21,6 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import net.dv8tion.jda.api.utils.FileUpload;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.bson.types.ObjectId;
 
@@ -101,7 +100,7 @@ public class GameCommand implements SlashCommandHandler, ButtonHandler {
         messageCreateBuilder.addEmbeds(embedBuilder.build());
         if (gameName.equals(BLACKJACK_GAME_NAME)) {
             gameId = blackjackController.newGame(2, 2, gameStarter);
-            file = new File("/Users/peace/Downloads/Blackjack21.jpg");
+            // file = new File("/Users/peace/Downloads/Blackjack21.jpg");
             embedBuilder.setImage("attachment://blackjack.jpg");
             Button join =
                     Button.primary(
@@ -110,9 +109,8 @@ public class GameCommand implements SlashCommandHandler, ButtonHandler {
                     Button.danger(
                             this.getName() + ":start" + ":" + gameId + ":" + gameName, "START");
 
-            messageCreateBuilder
-                    .addActionRow(join, start)
-                    .addFiles(FileUpload.fromData(file, "blackjack.jpg"));
+            messageCreateBuilder.addActionRow(join, start);
+            // .addFiles(FileUpload.fromData(file, "blackjack.jpg"));
         } else if (gameName.equals(SLOTMACHINE_GAME_NAME)) {
             gameId = slotMachineController.newGame(gameStarter);
             Button start =

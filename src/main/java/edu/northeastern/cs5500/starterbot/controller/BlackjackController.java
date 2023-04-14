@@ -7,14 +7,19 @@ import edu.northeastern.cs5500.starterbot.game.blackjack.BlackjackPlayer;
 import edu.northeastern.cs5500.starterbot.game.blackjack.Card;
 import edu.northeastern.cs5500.starterbot.game.blackjack.Result;
 import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
+import edu.northeastern.cs5500.starterbot.util.BlackjackUtils;
 import edu.northeastern.cs5500.starterbot.view.BlackjackView;
+import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.utils.FileUpload;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.bson.types.ObjectId;
 
@@ -146,8 +151,9 @@ public class BlackjackController {
 
     private void showCard(BlackjackPlayer currentPlayer, @Nonnull ButtonInteractionEvent event) {
         for (Card card : currentPlayer.getHand().getCards()) {
-            System.out.println(card.toString());
-            sendPrivateMessage(event, card.toString());
+            // System.out.println(card.toString());
+            String cardImagePath = BlackjackUtils.mapCardImageLocation(card);
+            sendPrivateFile(event, cardImagePath);
         }
     }
 
@@ -157,6 +163,19 @@ public class BlackjackController {
             event.getHook().sendMessage(messageContent).setEphemeral(true).queue();
         } else {
             event.reply(messageContent).setEphemeral(true).queue();
+        }
+    }
+
+    private void sendPrivateFile(@Nonnull ButtonInteractionEvent event, String filePath) {
+        EmbedBuilder embedBuilder = new EmbedBuilder().setImage("attachment://card_image.png");
+        MessageCreateBuilder messageCreateBuilder =
+                new MessageCreateBuilder()
+                        .addEmbeds(embedBuilder.build())
+                        .addFiles(FileUpload.fromData(new File(filePath), "card_image.png"));
+        if (event.isAcknowledged()) {
+            event.getHook().sendMessage(messageCreateBuilder.build()).setEphemeral(true).queue();
+        } else {
+            event.reply(messageCreateBuilder.build()).setEphemeral(true).queue();
         }
     }
 
