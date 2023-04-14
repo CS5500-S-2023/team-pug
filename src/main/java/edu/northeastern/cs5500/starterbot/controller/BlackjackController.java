@@ -9,7 +9,7 @@ import edu.northeastern.cs5500.starterbot.game.blackjack.Result;
 import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
 import edu.northeastern.cs5500.starterbot.util.BlackjackUtils;
 import edu.northeastern.cs5500.starterbot.view.BlackjackView;
-import java.io.File;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -168,10 +168,12 @@ public class BlackjackController {
 
     private void sendPrivateFile(@Nonnull ButtonInteractionEvent event, String filePath) {
         EmbedBuilder embedBuilder = new EmbedBuilder().setImage("attachment://card_image.png");
+        InputStream is = getClass().getResourceAsStream(filePath);
+        Objects.requireNonNull(is);
         MessageCreateBuilder messageCreateBuilder =
                 new MessageCreateBuilder()
                         .addEmbeds(embedBuilder.build())
-                        .addFiles(FileUpload.fromData(new File(filePath), "card_image.png"));
+                        .addFiles(FileUpload.fromData(is, "card_image.png"));
         if (event.isAcknowledged()) {
             event.getHook().sendMessage(messageCreateBuilder.build()).setEphemeral(true).queue();
         } else {

@@ -4,7 +4,7 @@ import edu.northeastern.cs5500.starterbot.game.blackjack.Card;
 
 public class BlackjackUtils {
     public static String mapCardImageLocation(Card card) {
-        String basePath = "src/main/java/edu/northeastern/cs5500/starterbot/resources/PNG-cards/";
+        String basePath = "/";
         String appendString = "_of_";
         String fileExtension = ".png";
         String rankString = card.getRank().getPathValue();
