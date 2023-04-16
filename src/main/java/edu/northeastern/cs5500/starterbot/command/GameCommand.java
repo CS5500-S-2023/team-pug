@@ -162,11 +162,13 @@ public class GameCommand implements SlashCommandHandler, ButtonHandler, ModalHan
         MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder();
         messageCreateBuilder.addEmbeds(embedBuilder.build());
         if (gameName.equals(BLACKJACK_GAME_NAME)) {
+
             int minNumberOfPlayers = event.getOption("min-players").getAsInt();
             int maxNumberOfPlayers = event.getOption("max-players").getAsInt();
             gameId =
                     blackjackController.newGame(
                             minNumberOfPlayers, maxNumberOfPlayers, gameStarter);
+
             embedBuilder.setImage("attachment://blackjack.jpg");
             Button join =
                     Button.primary(
