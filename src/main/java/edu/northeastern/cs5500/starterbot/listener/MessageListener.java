@@ -1,6 +1,7 @@
 package edu.northeastern.cs5500.starterbot.listener;
 
 import edu.northeastern.cs5500.starterbot.command.ButtonHandler;
+import edu.northeastern.cs5500.starterbot.command.ModalHandler;
 import edu.northeastern.cs5500.starterbot.command.SlashCommandHandler;
 import edu.northeastern.cs5500.starterbot.command.StringSelectHandler;
 import java.util.ArrayList;
@@ -11,11 +12,13 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 public class MessageListener extends ListenerAdapter {
@@ -23,6 +26,7 @@ public class MessageListener extends ListenerAdapter {
     @Inject Set<SlashCommandHandler> commands;
     @Inject Set<ButtonHandler> buttons;
     @Inject Set<StringSelectHandler> stringSelects;
+    @Inject Set<ModalHandler> modals;
 
     @Inject
     public MessageListener() {
@@ -80,5 +84,19 @@ public class MessageListener extends ListenerAdapter {
         }
 
         log.error("Unknown button handler: {}", handlerName);
+    }
+
+    @Override
+    public void onModalInteraction(@NotNull ModalInteractionEvent event) {
+        log.info("onModalInteraction: {}", event.getModalId());
+        String handlerName = event.getModalId().split(":")[0];
+        for (ModalHandler modalHandler : modals) {
+            if (modalHandler.getName().equals(handlerName)) {
+                modalHandler.onModalInteraction(event);
+                return;
+            }
+        }
+
+        log.error("Unknown modal handler: {}", handlerName);
     }
 }

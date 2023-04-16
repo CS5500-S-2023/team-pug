@@ -1,12 +1,14 @@
 package edu.northeastern.cs5500.starterbot.game;
 
+import edu.northeastern.cs5500.starterbot.controller.PlayerController;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 import lombok.Data;
 
 @Data
 public abstract class MuiltiplePlayerGame<T extends IPlayer> extends Game<T> {
-
+    @Inject PlayerController playerController;
     protected int currentIndex;
     protected List<T> players;
 
@@ -22,8 +24,8 @@ public abstract class MuiltiplePlayerGame<T extends IPlayer> extends Game<T> {
         else return true;
     }
 
-    public boolean canJoin() {
-        if (players.size() > config.getMaxPlayers()) return false;
+    public boolean canJoin(String discordId) {
+        if (players.size() >= config.getMaxPlayers()) return false;
         else return true;
     }
 
