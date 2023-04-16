@@ -70,6 +70,12 @@ public class CommandModule {
 
     @Provides
     @IntoSet
+    public ModalHandler provideGameModalCommand(GameCommand gameCommand) {
+        return gameCommand;
+    }
+
+    @Provides
+    @IntoSet
     public ButtonHandler provideBlackjackCommand(BlackjackCommand blackjackCommand) {
         return blackjackCommand;
     }

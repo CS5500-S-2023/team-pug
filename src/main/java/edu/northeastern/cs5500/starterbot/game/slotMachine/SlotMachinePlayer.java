@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.User;
 @Data
 public class SlotMachinePlayer implements IPlayer {
     private User user;
+    private double bet;
 
     public SlotMachinePlayer(User user) {
         this.user = user;

@@ -11,6 +11,7 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import net.dv8tion.jda.internal.utils.tuple.Pair;
@@ -36,10 +37,11 @@ public class SlotMachineController {
         return slotMachineGame.getId();
     }
 
-    public void startGame(ObjectId gameId, @Nonnull ButtonInteractionEvent event) {
+    public void startGame(ObjectId gameId, double bet, @Nonnull ModalInteractionEvent event) {
         SlotMachineGame slotMachineGame = getGameFromObjectId(gameId);
         Objects.requireNonNull(slotMachineGame);
         SlotMachinePlayer currentPlayer = slotMachineGame.getCurrentPlayer();
+        currentPlayer.setBet(bet);
         if (!slotMachineGame.canStart()) {
             sendMessage(event, "unable to play");
         } else {
@@ -59,10 +61,20 @@ public class SlotMachineController {
         return null;
     }
 
+    private void sendMessage(@Nonnull ModalInteractionEvent event, @Nonnull String messageContent) {
+
+        event.reply(messageContent).setEphemeral(true).queue();
+    }
+
     private void sendMessage(
             @Nonnull ButtonInteractionEvent event, @Nonnull String messageContent) {
 
         event.reply(messageContent).setEphemeral(true).queue();
+    }
+
+    private void sendMessage(
+            @Nonnull ModalInteractionEvent event, @Nonnull MessageCreateData messageCreateData) {
+        event.reply(messageCreateData).setEphemeral(true).queue();
     }
 
     private void sendMessage(

@@ -4,7 +4,9 @@ import static edu.northeastern.cs5500.starterbot.util.Constant.BLACKJACK_GAME_NA
 import static edu.northeastern.cs5500.starterbot.util.Constant.SLOTMACHINE_GAME_NAME;
 
 import edu.northeastern.cs5500.starterbot.controller.BlackjackController;
+import edu.northeastern.cs5500.starterbot.controller.PlayerController;
 import edu.northeastern.cs5500.starterbot.controller.SlotMachineController;
+import edu.northeastern.cs5500.starterbot.model.Player;
 import java.awt.Color;
 import java.io.File;
 import java.util.Objects;
@@ -14,22 +16,27 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import net.dv8tion.jda.api.utils.FileUpload;
+import net.dv8tion.jda.api.interactions.components.text.TextInput;
+import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
+import net.dv8tion.jda.api.interactions.modals.Modal;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.bson.types.ObjectId;
 
 @Singleton
 @Slf4j
-public class GameCommand implements SlashCommandHandler, ButtonHandler {
+public class GameCommand implements SlashCommandHandler, ButtonHandler, ModalHandler {
     @Inject BlackjackController blackjackController;
     @Inject SlotMachineController slotMachineController;
+    @Inject PlayerController playerController;
 
     @Inject
     public GameCommand() {}
@@ -41,7 +48,17 @@ public class GameCommand implements SlashCommandHandler, ButtonHandler {
                 .addOptions(
                         new OptionData(OptionType.STRING, "game-name", "The game to play")
                                 .addChoice(BLACKJACK_GAME_NAME, BLACKJACK_GAME_NAME)
-                                .addChoice(SLOTMACHINE_GAME_NAME, SLOTMACHINE_GAME_NAME));
+                                .addChoice(SLOTMACHINE_GAME_NAME, SLOTMACHINE_GAME_NAME))
+                .addOption(
+                        OptionType.INTEGER,
+                        "min-players",
+                        "Minimum number of players (for Blackjack)",
+                        false)
+                .addOption(
+                        OptionType.INTEGER,
+                        "max-players",
+                        "Maximum number of players (for Blackjack)",
+                        false);
     }
 
     @Override
@@ -60,10 +77,8 @@ public class GameCommand implements SlashCommandHandler, ButtonHandler {
         Objects.requireNonNull(gameName);
 
         if (gameName.equals(SLOTMACHINE_GAME_NAME)) {
-            // Send a Direct Message to the user for the Slot Machine game
             event.reply(createStartGameMessageBuilder(event).build()).setEphemeral(true).queue();
         } else {
-            // For other games, reply in the public channel
             event.reply(createStartGameMessageBuilder(event).build()).queue();
         }
     }
@@ -73,15 +88,62 @@ public class GameCommand implements SlashCommandHandler, ButtonHandler {
         User user = event.getUser();
         ObjectId id = new ObjectId(event.getButton().getId().split(":")[2]);
         String gameName = event.getButton().getId().split(":")[3];
-        if (gameName.equals(BLACKJACK_GAME_NAME)) {
-            if (event.getButton().getLabel().equals("JOIN")) {
-                Objects.requireNonNull(user);
-                blackjackController.joinGame(id, user, event);
-            } else {
-                blackjackController.startGame(id, event);
+        String label = event.getButton().getLabel();
+        TextInput bet =
+                TextInput.create("sub", "Your Bet", TextInputStyle.SHORT)
+                        .setMinLength(1)
+                        .setRequired(true)
+                        .build();
+
+        Modal modal =
+                Modal.create(
+                                this.getName()
+                                        + ":"
+                                        + user.getId()
+                                        + ":"
+                                        + id
+                                        + ":"
+                                        + gameName
+                                        + ":"
+                                        + label,
+                                "Bet")
+                        .addActionRows(ActionRow.of(bet))
+                        .build();
+        event.replyModal(modal).queue();
+    }
+
+    @Override
+    public void onModalInteraction(@Nonnull ModalInteractionEvent event) {
+        String userId = event.getModalId().split(":")[1];
+        ObjectId gameId = new ObjectId(event.getModalId().split(":")[2]);
+        String gameName = event.getModalId().split(":")[3];
+        String label = event.getModalId().split(":")[4];
+        if (userId.equals(event.getUser().getId())) {
+            Double bet = Double.valueOf(event.getValue("sub").getAsString());
+            Player player = playerController.getPlayer(event.getUser().getId());
+            if (player.getBalance() >= bet && bet > 0) {
+                if (gameName.equals(BLACKJACK_GAME_NAME)) {
+                    if (label.equals("JOIN")) {
+                        Objects.requireNonNull(event.getUser());
+                        blackjackController.joinGame(gameId, event.getUser(), bet, event);
+                    } else {
+                        blackjackController.startGame(gameId, bet, event);
+                    }
+
+                } else if (gameName.equals(SLOTMACHINE_GAME_NAME)) {
+                    slotMachineController.startGame(gameId, bet, event);
+                }
+
+                if (event.isAcknowledged()) {
+                    event.getHook().sendMessage("You bet" + bet + "$").setEphemeral(true).queue();
+                } else {
+                    event.reply("You bet" + bet + "$").setEphemeral(true).queue();
+                }
+            } else if (player.getBalance() < bet) {
+                event.reply("bet is larger than balance").setEphemeral(true).queue();
+            } else if (bet < 0) {
+                event.reply("bet cannot be negative").setEphemeral(true).queue();
             }
-        } else if (gameName.equals(SLOTMACHINE_GAME_NAME)) {
-            slotMachineController.startGame(id, event);
         }
     }
 
@@ -100,8 +162,11 @@ public class GameCommand implements SlashCommandHandler, ButtonHandler {
         MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder();
         messageCreateBuilder.addEmbeds(embedBuilder.build());
         if (gameName.equals(BLACKJACK_GAME_NAME)) {
-            gameId = blackjackController.newGame(2, 2, gameStarter);
-            file = new File("/Users/peace/Downloads/Blackjack21.jpg");
+            int minNumberOfPlayers = event.getOption("min-players").getAsInt();
+            int maxNumberOfPlayers = event.getOption("max-players").getAsInt();
+            gameId =
+                    blackjackController.newGame(
+                            minNumberOfPlayers, maxNumberOfPlayers, gameStarter);
             embedBuilder.setImage("attachment://blackjack.jpg");
             Button join =
                     Button.primary(
@@ -110,9 +175,8 @@ public class GameCommand implements SlashCommandHandler, ButtonHandler {
                     Button.danger(
                             this.getName() + ":start" + ":" + gameId + ":" + gameName, "START");
 
-            messageCreateBuilder
-                    .addActionRow(join, start)
-                    .addFiles(FileUpload.fromData(file, "blackjack.jpg"));
+            messageCreateBuilder.addActionRow(join, start);
+
         } else if (gameName.equals(SLOTMACHINE_GAME_NAME)) {
             gameId = slotMachineController.newGame(gameStarter);
             Button start =

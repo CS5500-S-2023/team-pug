@@ -14,9 +14,11 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.bson.types.ObjectId;
+import org.jetbrains.annotations.NotNull;
 
 /** Connect with blackjack game and UI */
 public class BlackjackController {
@@ -40,10 +42,11 @@ public class BlackjackController {
         return blackjackGame.getId();
     }
 
-    public void startGame(ObjectId gameId, @Nonnull ButtonInteractionEvent event) {
+    public void startGame(ObjectId gameId, double bet, @NotNull ModalInteractionEvent event) {
         BlackjackGame blackjackGame = getGameFromObjectId(gameId);
         Objects.requireNonNull(blackjackGame);
         BlackjackPlayer currentPlayer = blackjackGame.getCurrentPlayer();
+        currentPlayer.setBet(bet);
         if (!blackjackGame.canStart()) {
             sendMessage(event, "unable to play due to the minimum size");
         } else {
@@ -56,14 +59,18 @@ public class BlackjackController {
         }
     }
 
-    public void joinGame(ObjectId gameId, User user, @Nonnull ButtonInteractionEvent event) {
+    public void joinGame(
+            ObjectId gameId, User user, double bet, @NotNull ModalInteractionEvent event) {
         BlackjackGame blackjackGame = getGameFromObjectId(gameId);
         Objects.requireNonNull(blackjackGame);
-        if (blackjackGame.canJoin()) {
-            blackjackGame.joinPlayer(new BlackjackNormalPlayer(user));
+        if (blackjackGame.canJoin(user.getId())) {
+            BlackjackNormalPlayer normalPlayerayer = new BlackjackNormalPlayer(user);
+            normalPlayerayer.setBet(bet);
+            blackjackGame.joinPlayer(normalPlayerayer);
             sendMessage(event, user.getAsMention() + ": joined");
+
         } else {
-            sendMessage(event, "Unable to join due to the maximum size");
+            sendMessage(event, "Unable to join ");
         }
     }
 
@@ -160,15 +167,43 @@ public class BlackjackController {
         }
     }
 
+    private void sendMessage(@Nonnull ModalInteractionEvent event, @Nonnull String messageContent) {
+        if (event.isAcknowledged()) {
+            event.getHook().sendMessage(messageContent).queue();
+        } else {
+            event.reply(messageContent).queue();
+        }
+    }
+
     private void sendMessage(
             @Nonnull ButtonInteractionEvent event, @Nonnull String messageContent) {
+        if (event.isAcknowledged()) {
+            event.getHook().sendMessage(messageContent).queue();
+        } else {
+            event.reply(messageContent).queue();
+        }
+    }
 
-        event.reply(messageContent).queue();
+    private void sendMessage(
+            @Nonnull ModalInteractionEvent event, @Nonnull MessageCreateData messageCreateData) {
+
+        if (event.isAcknowledged()) {
+            event.getHook().sendMessage(messageCreateData).queue();
+
+        } else {
+            event.reply(messageCreateData).queue();
+        }
     }
 
     private void sendMessage(
             @Nonnull ButtonInteractionEvent event, @Nonnull MessageCreateData messageCreateData) {
-        event.reply(messageCreateData).queue();
+
+        if (event.isAcknowledged()) {
+            event.getHook().sendMessage(messageCreateData).queue();
+
+        } else {
+            event.reply(messageCreateData).queue();
+        }
     }
 
     private void updateBalance(List<Result> results) {
