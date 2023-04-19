@@ -27,6 +27,15 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
         }
     }
 
+    public boolean containsId(String discordId) {
+        for (BlackjackPlayer player : players) {
+            if (player.getUser().getId().equals(discordId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void hit() {
         Card card = deck.shuffleDeal();
         getCurrentPlayer().addCard(card);
