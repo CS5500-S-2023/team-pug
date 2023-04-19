@@ -89,6 +89,12 @@ public class GameCommand implements SlashCommandHandler, ButtonHandler, ModalHan
         ObjectId id = new ObjectId(event.getButton().getId().split(":")[2]);
         String gameName = event.getButton().getId().split(":")[3];
         String label = event.getButton().getLabel();
+        if (gameName.equals(BLACKJACK_GAME_NAME) && label.equals("JOIN")) {
+            if (blackjackController.containsUserId(id, user)) {
+                event.reply("You havel already joined").setEphemeral(true).queue();
+                return;
+            }
+        }
         TextInput bet =
                 TextInput.create("sub", "Your Bet", TextInputStyle.SHORT)
                         .setMinLength(1)

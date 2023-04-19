@@ -238,4 +238,12 @@ public class BlackjackController {
     public boolean containsGameId(ObjectId id) {
         return blackjackRepository.contains(id);
     }
+
+    public boolean containsUserId(ObjectId gameID, User user) {
+        BlackjackGame blackjackGame = getGameFromObjectId(gameID);
+        if (blackjackGame.containsId(user.getId())) {
+            return true;
+        }
+        return false;
+    }
 }
