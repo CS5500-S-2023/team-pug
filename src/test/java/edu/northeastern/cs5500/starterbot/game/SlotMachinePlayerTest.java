@@ -40,4 +40,3 @@ public class SlotMachinePlayerTest {
         assertEquals(10.0, player.getBet(), 0.001);
     }
 }
-

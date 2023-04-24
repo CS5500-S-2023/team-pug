@@ -2,9 +2,8 @@ package edu.northeastern.cs5500.starterbot.game;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.HashMap;
-
 import edu.northeastern.cs5500.starterbot.game.slotMachine.Symbols;
+import java.util.HashMap;
 import org.junit.Test;
 
 public class SymbolsTest {
@@ -24,4 +23,3 @@ public class SymbolsTest {
         assertEquals(Integer.valueOf(50), symbols.get(":moneybag:"));
     }
 }
-

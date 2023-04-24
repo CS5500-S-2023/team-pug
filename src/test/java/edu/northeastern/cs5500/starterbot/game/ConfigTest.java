@@ -1,7 +1,8 @@
 package edu.northeastern.cs5500.starterbot.game;
 
-import org.junit.Test;
 import static org.junit.Assert.*;
+
+import org.junit.Test;
 
 public class ConfigTest {
 
@@ -42,4 +43,3 @@ public class ConfigTest {
         assertEquals(4, config.getMaxPlayers());
     }
 }
-

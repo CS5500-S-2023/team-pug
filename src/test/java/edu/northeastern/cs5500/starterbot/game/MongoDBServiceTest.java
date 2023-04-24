@@ -15,12 +15,9 @@ public class MongoDBServiceTest {
         mongoDBService = new MongoDBService();
     }
 
-   
     @Test
     public void testMongoDatabase() {
         MongoDatabase mongoDatabase = mongoDBService.getMongoDatabase();
         Assertions.assertNotNull(mongoDatabase);
     }
-
 }
-

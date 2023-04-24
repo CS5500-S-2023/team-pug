@@ -1,18 +1,17 @@
 package edu.northeastern.cs5500.starterbot.game;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import edu.northeastern.cs5500.starterbot.game.blackjack.BlackjackNormalPlayer;
+import net.dv8tion.jda.api.entities.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import net.dv8tion.jda.api.entities.User;
 
 class BlackjackNormalPlayerTest {
-    @Mock
-    private User user;
+    @Mock private User user;
     private BlackjackNormalPlayer player;
 
     @BeforeEach
@@ -20,8 +19,6 @@ class BlackjackNormalPlayerTest {
         MockitoAnnotations.openMocks(this);
         player = new BlackjackNormalPlayer(user);
     }
-
-
 
     @Test
     void wantPlayReturnsTrueWhenNotStop() {
@@ -35,4 +32,3 @@ class BlackjackNormalPlayerTest {
         assertFalse(player.wantPlay());
     }
 }
-

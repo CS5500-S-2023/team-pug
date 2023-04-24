@@ -35,5 +35,4 @@ class UserPreferenceTest {
         userPreference.setPreferredName(preferredName);
         assertEquals(preferredName, userPreference.getPreferredName());
     }
-
 }
