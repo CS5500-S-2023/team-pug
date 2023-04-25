@@ -82,21 +82,7 @@ class SlotMachineControllerTest {
 
         Mockito.verify(playerController, Mockito.times(1)).updateBalance(user.getId(), betAmount);
     }
-    //  @Test
-    //  void testHandlePlayerAction_play() {
-    //    User user = Mockito.mock(User.class);
-    //    ObjectId gameId = slotMachineController.newGame(user);
-    //    ButtonInteractionEvent event = Mockito.mock(ButtonInteractionEvent.class);
-    //    InteractionHook hook = Mockito.mock(InteractionHook.class);
-    //
-    //    Mockito.when(event.getHook()).thenReturn(hook);
-    //    Mockito.when(event.reply(Mockito.anyString())).thenReturn((ReplyCallbackAction) hook);
-    //    slotMachineController.handlePlayerAction(gameId, "PLAY", event);
-    //
-    //    Mockito.verify(hook, Mockito.times(1)).sendMessage(Mockito.any(MessageCreateData.class));
-    //    Mockito.verify(playerController, Mockito.times(1)).updateBalance(Mockito.anyString(),
-    // Mockito.anyDouble());
-    //  }
+
     @Test
     void testHandlePlayerAction_play() {
         User user = Mockito.mock(User.class);
