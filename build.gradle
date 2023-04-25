@@ -61,6 +61,9 @@ dependencies {
     // MongoDB for data storage
     implementation 'org.mongodb:mongo-java-driver:_'
 
+    // Mock object in test
+    testImplementation 'org.mockito:mockito-core:3.11.2'
+
 }
 
 application {
@@ -85,7 +88,7 @@ jacocoTestReport {
     reports {
         xml.enabled true
         // Change html.enabled to true if you want html reports
-        html.enabled false
+        html.enabled true
         csv.enabled false
         xml.destination file("${buildDir}/reports/jacoco.xml")
     }
