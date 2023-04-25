@@ -21,6 +21,6 @@ public class Player implements Model {
     }
 
     public void setLastLoginTime() {
-        lastLoginTime = new SimpleDateFormat("yyyy.MM.dd.HH.mm").format(new Date());
+        lastLoginTime = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
     }
 }

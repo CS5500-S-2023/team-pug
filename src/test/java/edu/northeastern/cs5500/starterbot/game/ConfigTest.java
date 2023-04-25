@@ -1,45 +1,46 @@
 package edu.northeastern.cs5500.starterbot.game;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ConfigTest {
+class ConfigTest {
 
     @Test
-    public void testConstructorWithMinAndMaxPlayers() {
-        Config config = new Config("test", 2, 4);
-        assertEquals("test", config.getName());
-        assertEquals(2, config.getMinPlayers());
-        assertEquals(4, config.getMaxPlayers());
+    void testConfigConstructorWithMinMaxPlayers() {
+        String name = "Test Game";
+        int minPlayers = 2;
+        int maxPlayers = 4;
+        Config config = new Config(name, minPlayers, maxPlayers);
+
+        assertEquals(name, config.getName());
+        assertEquals(minPlayers, config.getMinPlayers());
+        assertEquals(maxPlayers, config.getMaxPlayers());
     }
 
     @Test
-    public void testConstructorWithNameOnly() {
-        Config config = new Config("test");
-        assertEquals("test", config.getName());
+    void testConfigConstructorWithNameOnly() {
+        String name = "Test Game";
+        Config config = new Config(name);
+
+        assertEquals(name, config.getName());
         assertEquals(1, config.getMinPlayers());
         assertEquals(1, config.getMaxPlayers());
     }
 
     @Test
-    public void testSetName() {
-        Config config = new Config("test");
-        config.setName("new test");
-        assertEquals("new test", config.getName());
-    }
+    void testConfigSetters() {
+        String name = "Test Game";
+        int minPlayers = 2;
+        int maxPlayers = 4;
+        Config config = new Config(name);
 
-    @Test
-    public void testSetMinPlayers() {
-        Config config = new Config("test");
-        config.setMinPlayers(2);
-        assertEquals(2, config.getMinPlayers());
-    }
+        config.setName("New Game Name");
+        config.setMinPlayers(minPlayers);
+        config.setMaxPlayers(maxPlayers);
 
-    @Test
-    public void testSetMaxPlayers() {
-        Config config = new Config("test");
-        config.setMaxPlayers(4);
-        assertEquals(4, config.getMaxPlayers());
+        assertEquals("New Game Name", config.getName());
+        assertEquals(minPlayers, config.getMinPlayers());
+        assertEquals(maxPlayers, config.getMaxPlayers());
     }
 }

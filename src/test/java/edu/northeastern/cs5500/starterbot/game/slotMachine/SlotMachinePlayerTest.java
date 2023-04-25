@@ -1,10 +1,9 @@
-package edu.northeastern.cs5500.starterbot.game;
+package edu.northeastern.cs5500.starterbot.game.slotMachine;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
-import edu.northeastern.cs5500.starterbot.game.slotMachine.SlotMachinePlayer;
 import net.dv8tion.jda.api.entities.User;
 import org.junit.Before;
 import org.junit.Test;
