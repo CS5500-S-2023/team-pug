@@ -53,7 +53,7 @@ public class SlotMachineController {
         }
     }
 
-    private SlotMachineGame getGameFromObjectId(ObjectId id) {
+    public SlotMachineGame getGameFromObjectId(ObjectId id) {
         Collection<SlotMachineGame> collection = slotMachineRepository.getAll();
         for (SlotMachineGame slotMachineGame : collection) {
             if (slotMachineGame.getId().equals(id)) return slotMachineGame;
