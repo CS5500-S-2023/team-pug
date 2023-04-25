@@ -72,4 +72,43 @@ class HandTest {
         hand.addCard(new Card(Rank.TWO, Suit.CLUBS));
         assertFalse(hand.isBlackjack());
     }
+
+    @Test
+    public void testEquals() {
+        Hand hand1 = new Hand();
+        Hand hand2 = new Hand();
+        assertEquals(hand1, hand2);
+        hand1.addCard(new Card(Rank.TWO, Suit.HEARTS));
+        assertNotEquals(hand1, hand2);
+        hand2.addCard(new Card(Rank.TWO, Suit.HEARTS));
+        assertEquals(hand1, hand2);
+    }
+
+    @Test
+    public void testHashCode() {
+        Hand hand1 = new Hand();
+        Hand hand2 = new Hand();
+        assertEquals(hand1.hashCode(), hand2.hashCode());
+        hand1.addCard(new Card(Rank.TWO, Suit.HEARTS));
+        assertNotEquals(hand1.hashCode(), hand2.hashCode());
+        hand2.addCard(new Card(Rank.TWO, Suit.HEARTS));
+        assertEquals(hand1.hashCode(), hand2.hashCode());
+    }
+
+    @Test
+    public void testToString() {
+        Hand hand = new Hand();
+        hand.addCard(new Card(Rank.TWO, Suit.HEARTS));
+        hand.addCard(new Card(Rank.THREE, Suit.DIAMONDS));
+        String expected =
+                "Hand{cards=[Card{rank=TWO, suit=HEARTS}, Card{rank=THREE, suit=DIAMONDS}]}";
+        assertNotEquals(expected, hand.toString());
+    }
+
+    @Test
+    public void testCanEqual() {
+        Hand hand1 = new Hand();
+        Hand hand2 = new Hand();
+        assertTrue(hand1.canEqual(hand2));
+    }
 }
