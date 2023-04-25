@@ -60,7 +60,7 @@ dependencies {
 
     // MongoDB for data storage
     implementation 'org.mongodb:mongo-java-driver:_'
-    
+
     testImplementation 'org.mockito:mockito-core:4.2.0'
     implementation 'net.dv8tion:JDA:4.4.0'
 
