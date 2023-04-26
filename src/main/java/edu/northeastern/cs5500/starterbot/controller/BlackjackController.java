@@ -124,7 +124,7 @@ public class BlackjackController {
             System.out.println("End of Round");
             if (blackjackGame.getDealer().getHand().isBust()) {
                 // dealer lose
-                List<Result> results = blackjackGame.shareDealerBets();
+                List<Result> results = blackjackGame.shareAllBets();
                 updateBalance(results);
                 sendMessage(
                         event, BlackjackView.createBlackjackResultMessageBuilder(results).build());
@@ -164,14 +164,14 @@ public class BlackjackController {
         }
     }
 
-    private void sendPrivateMessage(
-            @Nonnull ButtonInteractionEvent event, @Nonnull String messageContent) {
-        if (event.isAcknowledged()) {
-            event.getHook().sendMessage(messageContent).setEphemeral(true).queue();
-        } else {
-            event.reply(messageContent).setEphemeral(true).queue();
-        }
-    }
+    // private void sendPrivateMessage(
+    // @Nonnull ButtonInteractionEvent event, @Nonnull String messageContent) {
+    // if (event.isAcknowledged()) {
+    // event.getHook().sendMessage(messageContent).setEphemeral(true).queue();
+    // } else {
+    // event.reply(messageContent).setEphemeral(true).queue();
+    // }
+    // }
 
     private void sendMessage(@Nonnull ModalInteractionEvent event, @Nonnull String messageContent) {
         if (event.isAcknowledged()) {
@@ -196,14 +196,14 @@ public class BlackjackController {
         }
     }
 
-    private void sendMessage(
-            @Nonnull ButtonInteractionEvent event, @Nonnull String messageContent) {
-        if (event.isAcknowledged()) {
-            event.getHook().sendMessage(messageContent).queue();
-        } else {
-            event.reply(messageContent).queue();
-        }
-    }
+    // private void sendMessage(
+    // @Nonnull ButtonInteractionEvent event, @Nonnull String messageContent) {
+    // if (event.isAcknowledged()) {
+    // event.getHook().sendMessage(messageContent).queue();
+    // } else {
+    // event.reply(messageContent).queue();
+    // }
+    // }
 
     private void sendMessage(
             @Nonnull ModalInteractionEvent event, @Nonnull MessageCreateData messageCreateData) {
@@ -245,5 +245,9 @@ public class BlackjackController {
             return true;
         }
         return false;
+    }
+
+    public GenericRepository<BlackjackGame> getBlackjackRepository() {
+        return blackjackRepository;
     }
 }

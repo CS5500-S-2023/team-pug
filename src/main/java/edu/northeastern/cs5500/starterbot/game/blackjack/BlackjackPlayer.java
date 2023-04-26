@@ -18,6 +18,13 @@ public abstract class BlackjackPlayer implements IPlayer {
         stop = false;
     }
 
+    protected BlackjackPlayer(User user, double bet) {
+        this.user = user;
+        hand = new Hand();
+        this.bet = bet;
+        stop = false;
+    }
+
     public void addCard(Card card) {
         hand.addCard(card);
     }

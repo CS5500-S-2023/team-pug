@@ -8,6 +8,10 @@ public class BlackjackDealer extends BlackjackPlayer {
         super(user);
     }
 
+    public BlackjackDealer(User user, double bet) {
+        super(user, bet);
+    }
+
     @Override
     public boolean canPlay() {
         return getHand().getCurrentValue() <= 17;
