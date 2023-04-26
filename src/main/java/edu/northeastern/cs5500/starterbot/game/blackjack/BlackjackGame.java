@@ -14,7 +14,7 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
     public BlackjackGame(Config config, BlackjackPlayer holder) {
         super(config, holder);
         this.deck = new Deck();
-        this.dealer = new BlackjackDealer(holder.getUser());
+        this.dealer = new BlackjackDealer(holder.getUser(), holder.getBet());
     }
 
     public void initPlayerCard() {
@@ -27,6 +27,15 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
         }
     }
 
+    public boolean containsId(String discordId) {
+        for (BlackjackPlayer player : players) {
+            if (player.getUser().getId().equals(discordId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void hit() {
         Card card = deck.shuffleDeal();
         getCurrentPlayer().addCard(card);
@@ -34,30 +43,6 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
 
     public void stand() {
         getCurrentPlayer().setStop(true);
-    }
-
-    public List<Result> shareDealerBets() {
-        double sharedTotalBets = dealer.getBet();
-        double winnerTotalBets = 0;
-        for (BlackjackPlayer player : players) {
-            if (player.canPlay()) {
-                winnerTotalBets += player.getBet();
-            } else {
-                sharedTotalBets += player.getBet();
-            }
-        }
-        List<Result> gameResults = new ArrayList<>();
-        for (BlackjackPlayer player : players) {
-            if (player.canPlay()) {
-                gameResults.add(
-                        new Result(
-                                player.getUser(),
-                                player.getBet() / winnerTotalBets * sharedTotalBets));
-            } else {
-                gameResults.add(new Result(player.getUser(), -player.getBet()));
-            }
-        }
-        return gameResults;
     }
 
     public List<Result> shareAllBets() {
@@ -84,13 +69,5 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
             }
         }
         return gameResults;
-    }
-
-    // remove all the player to end the game.
-    public void removeAllplayers() {
-
-        for (BlackjackPlayer player : players) {
-            removePlayer(player);
-        }
     }
 }

@@ -14,10 +14,12 @@ import org.jetbrains.annotations.NotNull;
 @Slf4j
 public class SlotMachineCommand implements ButtonHandler {
 
-    @Inject SlotMachineController slotMachineController;
+    private SlotMachineController slotMachineController;
 
     @Inject
-    public SlotMachineCommand() {}
+    public SlotMachineCommand(SlotMachineController slotMachineController) {
+        this.slotMachineController = slotMachineController;
+    }
 
     @NotNull
     @Override

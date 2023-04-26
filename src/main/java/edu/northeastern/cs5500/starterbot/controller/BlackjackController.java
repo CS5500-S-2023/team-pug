@@ -25,7 +25,6 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 
-/** Connect with blackjack game and UI */
 public class BlackjackController {
     private GenericRepository<BlackjackGame> blackjackRepository;
     private PlayerController playerController;
@@ -121,10 +120,9 @@ public class BlackjackController {
                             .build());
         } else {
             // check if need to end the game
-            System.out.println("End of Round");
             if (blackjackGame.getDealer().getHand().isBust()) {
                 // dealer lose
-                List<Result> results = blackjackGame.shareDealerBets();
+                List<Result> results = blackjackGame.shareAllBets();
                 updateBalance(results);
                 sendMessage(
                         event, BlackjackView.createBlackjackResultMessageBuilder(results).build());
@@ -138,10 +136,8 @@ public class BlackjackController {
                 }
             }
             if (continuePlayerSize < blackjackGame.getConfig().getMinPlayers()) {
-                // one player win
                 List<Result> results = blackjackGame.shareAllBets();
                 updateBalance(results);
-                // blackjackGame.removeAllplayers();
                 sendMessage(
                         event, BlackjackView.createBlackjackResultMessageBuilder(results).build());
                 blackjackRepository.delete(blackjackGame.getId());
@@ -158,18 +154,8 @@ public class BlackjackController {
 
     private void showCard(BlackjackPlayer currentPlayer, @Nonnull ButtonInteractionEvent event) {
         for (Card card : currentPlayer.getHand().getCards()) {
-            // System.out.println(card.toString());
             String cardImagePath = BlackjackUtils.mapCardImageLocation(card);
             sendPrivateFile(event, cardImagePath);
-        }
-    }
-
-    private void sendPrivateMessage(
-            @Nonnull ButtonInteractionEvent event, @Nonnull String messageContent) {
-        if (event.isAcknowledged()) {
-            event.getHook().sendMessage(messageContent).setEphemeral(true).queue();
-        } else {
-            event.reply(messageContent).setEphemeral(true).queue();
         }
     }
 
@@ -193,15 +179,6 @@ public class BlackjackController {
             event.getHook().sendMessage(messageCreateBuilder.build()).setEphemeral(true).queue();
         } else {
             event.reply(messageCreateBuilder.build()).setEphemeral(true).queue();
-        }
-    }
-
-    private void sendMessage(
-            @Nonnull ButtonInteractionEvent event, @Nonnull String messageContent) {
-        if (event.isAcknowledged()) {
-            event.getHook().sendMessage(messageContent).queue();
-        } else {
-            event.reply(messageContent).queue();
         }
     }
 
@@ -237,5 +214,17 @@ public class BlackjackController {
 
     public boolean containsGameId(ObjectId id) {
         return blackjackRepository.contains(id);
+    }
+
+    public boolean containsUserId(ObjectId gameID, User user) {
+        BlackjackGame blackjackGame = getGameFromObjectId(gameID);
+        if (blackjackGame.containsId(user.getId())) {
+            return true;
+        }
+        return false;
+    }
+
+    public GenericRepository<BlackjackGame> getBlackjackRepository() {
+        return blackjackRepository;
     }
 }

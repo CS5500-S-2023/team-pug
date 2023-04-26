@@ -13,10 +13,6 @@ plugins {
 
     // Spotless to format code easily
     id "com.diffplug.spotless"
-
-
-
-
 }
 
 repositories {
@@ -65,12 +61,10 @@ dependencies {
     // MongoDB for data storage
     implementation 'org.mongodb:mongo-java-driver:_'
 
-    //  Add Mockito for unit testing
-    testImplementation 'org.mockito:mockito-core:3.11.2'
+    testImplementation 'org.mockito:mockito-core:4.2.0'
+    // implementation 'net.dv8tion:JDA:4.4.0'
 
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:2.19.0'
-    testImplementation 'org.hamcrest:hamcrest-core:1.3'
+
 
 }
 
@@ -137,20 +131,4 @@ spotless {
         targetExclude 'build/**'
         googleJavaFormat().aosp()
     }
-}
-task coverageReport(type: JacocoReport, dependsOn: ['test']) {
-  reports {
-    xml.enabled false
-    html.enabled true
-  }
-
-  def sourceSets = project.sourceSets.findAll { it.name != 'test' }
-  sourceSets.each {
-    def name = it.name.capitalize()
-    def source = it.allJava.srcDirs
-    def classes = it.output.classesDirs
-    classDirectories.from = classDirectories.from + files(classes)
-    sourceDirectories.from = sourceDirectories.from + files(source)
-    executionData.from = fileTree(dir: "$buildDir/jacoco", include: "**/*.exec")
-  }
 }
