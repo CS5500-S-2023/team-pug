@@ -14,7 +14,7 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
     public BlackjackGame(Config config, BlackjackPlayer holder) {
         super(config, holder);
         this.deck = new Deck();
-        this.dealer = new BlackjackDealer(holder.getUser());
+        this.dealer = new BlackjackDealer(holder.getUser(), holder.getBet());
     }
 
     public void initPlayerCard() {
@@ -45,29 +45,29 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
         getCurrentPlayer().setStop(true);
     }
 
-    public List<Result> shareDealerBets() {
-        double sharedTotalBets = dealer.getBet();
-        double winnerTotalBets = 0;
-        for (BlackjackPlayer player : players) {
-            if (player.canPlay()) {
-                winnerTotalBets += player.getBet();
-            } else {
-                sharedTotalBets += player.getBet();
-            }
-        }
-        List<Result> gameResults = new ArrayList<>();
-        for (BlackjackPlayer player : players) {
-            if (player.canPlay()) {
-                gameResults.add(
-                        new Result(
-                                player.getUser(),
-                                player.getBet() / winnerTotalBets * sharedTotalBets));
-            } else {
-                gameResults.add(new Result(player.getUser(), -player.getBet()));
-            }
-        }
-        return gameResults;
-    }
+    // public List<Result> shareDealerBets() {
+    // double sharedTotalBets = dealer.getBet();
+    // double winnerTotalBets = 0;
+    // for (BlackjackPlayer player : players) {
+    // if (player.canPlay()) {
+    // winnerTotalBets += player.getBet();
+    // } else {
+    // sharedTotalBets += player.getBet();
+    // }
+    // }
+    // List<Result> gameResults = new ArrayList<>();
+    // for (BlackjackPlayer player : players) {
+    // if (player.canPlay()) {
+    // gameResults.add(
+    // new Result(
+    // player.getUser(),
+    // player.getBet() / winnerTotalBets * sharedTotalBets));
+    // } else {
+    // gameResults.add(new Result(player.getUser(), -player.getBet()));
+    // }
+    // }
+    // return gameResults;
+    // }
 
     public List<Result> shareAllBets() {
         double sharedTotalBets = 0;
@@ -96,10 +96,10 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
     }
 
     // remove all the player to end the game.
-    public void removeAllplayers() {
+    // public void removeAllplayers() {
 
-        for (BlackjackPlayer player : players) {
-            removePlayer(player);
-        }
-    }
+    // for (BlackjackPlayer player : players) {
+    // removePlayer(player);
+    // }
+    // }
 }
