@@ -4,17 +4,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import edu.northeastern.cs5500.starterbot.controller.PlayerController;
+import edu.northeastern.cs5500.starterbot.repository.InMemoryRepository;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
-
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
-import edu.northeastern.cs5500.starterbot.controller.PlayerController;
-import edu.northeastern.cs5500.starterbot.repository.InMemoryRepository;
 
 public class SetUserNameCommandTest {
     @Test
@@ -40,6 +38,7 @@ public class SetUserNameCommandTest {
         PlayerController playerController = new PlayerController(new InMemoryRepository<>());
         setUserNameCommand.playerController = playerController;
         setUserNameCommand.onSlashCommandInteraction(event);
-        assertEquals("testUser", setUserNameCommand.playerController.getPlayer("123").getUserName());
+        assertEquals(
+                "testUser", setUserNameCommand.playerController.getPlayer("123").getUserName());
     }
 }
