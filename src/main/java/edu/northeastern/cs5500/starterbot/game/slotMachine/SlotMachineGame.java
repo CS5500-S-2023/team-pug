@@ -7,10 +7,12 @@ import edu.northeastern.cs5500.starterbot.game.IndividualGame;
 import java.util.Random;
 import javax.annotation.Nonnull;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.internal.utils.tuple.Pair;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class SlotMachineGame extends IndividualGame<SlotMachinePlayer> {
 
     public SlotMachineGame(Config config, SlotMachinePlayer player) {

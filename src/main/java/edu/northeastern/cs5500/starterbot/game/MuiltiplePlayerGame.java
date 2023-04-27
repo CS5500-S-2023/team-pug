@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public abstract class MuiltiplePlayerGame<T extends IPlayer> extends Game<T> {
     @Inject PlayerController playerController;
     protected int currentIndex;
@@ -18,7 +20,6 @@ public abstract class MuiltiplePlayerGame<T extends IPlayer> extends Game<T> {
         joinPlayer(holder);
         currentIndex = 0;
     }
-
     public boolean canStart() {
         if (players.size() < config.getMinPlayers()) return false;
         else return true;

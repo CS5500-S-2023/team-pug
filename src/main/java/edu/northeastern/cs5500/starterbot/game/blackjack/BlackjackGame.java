@@ -5,8 +5,10 @@ import edu.northeastern.cs5500.starterbot.game.MuiltiplePlayerGame;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
     private Deck deck;
     private BlackjackDealer dealer;
