@@ -51,16 +51,11 @@ public class BlackjackController {
         Objects.requireNonNull(blackjackGame);
         BlackjackPlayer currentPlayer = blackjackGame.getCurrentPlayer();
         currentPlayer.setBet(bet);
-        // if (!blackjackGame.canStart()) {
-        // sendMessage(event, "unable to play due to the minimum size");
-        // } else {
-        // "Game start"
         blackjackGame.initPlayerCard();
         sendMessage(
                 event,
                 BlackjackView.createBlackjackMessageBuilder(currentPlayer.getUser(), gameId)
                         .build());
-        // }
     }
 
     public boolean canStart(ObjectId gameId) {
@@ -73,15 +68,10 @@ public class BlackjackController {
             ObjectId gameId, User user, double bet, @NotNull ModalInteractionEvent event) {
         BlackjackGame blackjackGame = getGameFromObjectId(gameId);
         Objects.requireNonNull(blackjackGame);
-        // if (blackjackGame.canJoin()) {
         BlackjackNormalPlayer normalPlayerayer = new BlackjackNormalPlayer(user);
         normalPlayerayer.setBet(bet);
         blackjackGame.joinPlayer(normalPlayerayer);
         sendMessage(event, user.getAsMention() + ": joined");
-
-        // } else {
-        // sendMessage(event, "Unable to join ");
-        // }
     }
 
     private BlackjackGame getGameFromObjectId(ObjectId id) {
@@ -111,8 +101,9 @@ public class BlackjackController {
             case "STAND" -> {
                 blackjackGame.stand();
             }
-            case "DOUBLEDOWN" -> {
-                blackjackGame.doubledown();
+            case "DOUBLE DOWN" -> {
+                Double bet = blackjackGame.doubledown();
+                event.reply("You bet $" + bet.toString()).setEphemeral(true).queue(null, null);
             }
         }
         // move to the next player
@@ -125,7 +116,6 @@ public class BlackjackController {
         } else {
             // check if need to end the game
             if (blackjackGame.getDealer().getHand().isBust()) {
-                // dealer lose
                 List<Result> results = blackjackGame.shareAllBets();
                 updateBalance(results);
                 sendMessage(

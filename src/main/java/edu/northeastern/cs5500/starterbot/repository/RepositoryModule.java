@@ -5,7 +5,6 @@ import dagger.Provides;
 import edu.northeastern.cs5500.starterbot.game.blackjack.BlackjackGame;
 import edu.northeastern.cs5500.starterbot.game.slotMachine.SlotMachineGame;
 import edu.northeastern.cs5500.starterbot.model.Player;
-import edu.northeastern.cs5500.starterbot.model.UserPreference;
 
 /**
  * A Dagger module for providing instances of repository classes used in the casino game.
@@ -25,17 +24,6 @@ public class RepositoryModule {
     // memory.
     // NOTE: The presence of commented-out code in your project *will* result in a
     // lowered grade.
-    /**
-     * Provides an instance of a repository for storing user preferences.
-     *
-     * @param repository the in-memory repository instance to be used
-     * @return a generic repository for user preferences
-     */
-    @Provides
-    public GenericRepository<UserPreference> provideUserPreferencesRepository(
-            InMemoryRepository<UserPreference> repository) {
-        return repository;
-    }
 
     /**
      * Provides an instance of a repository for storing player information.
@@ -48,6 +36,7 @@ public class RepositoryModule {
             InMemoryRepository<Player> repository) {
         return repository;
     }
+
     /**
      * Provides an instance of a repository for storing Blackjack game data.
      *
@@ -59,6 +48,7 @@ public class RepositoryModule {
             InMemoryRepository<BlackjackGame> repository) {
         return repository;
     }
+
     /**
      * Provides an instance of a repository for storing slot machine game data.
      *

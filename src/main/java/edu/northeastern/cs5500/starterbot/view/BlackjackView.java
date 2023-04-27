@@ -50,6 +50,7 @@ public class BlackjackView {
                 .addEmbeds(embedBuilder.build())
                 .addActionRow(hit, stand, doubleDown, showCard, surrender);
     }
+
     /**
      * Creates a Discord message builder for the Blackjack game result message.
      *
@@ -57,7 +58,8 @@ public class BlackjackView {
      * @return a MessageCreateBuilder with the game results as embed fields.
      */
     public static MessageCreateBuilder createBlackjackResultMessageBuilder(List<Result> results) {
-        EmbedBuilder embedBuilder = new EmbedBuilder().setTitle(BLACKJACK_GAME_NAME + " Result");
+        EmbedBuilder embedBuilder =
+                new EmbedBuilder().setTitle(BLACKJACK_GAME_NAME + " Result  " + ":sparkles:");
         for (Result result : results) {
             embedBuilder.addField(result.getUser().getName(), result.getBet().toString(), true);
         }
