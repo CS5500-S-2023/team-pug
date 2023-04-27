@@ -110,7 +110,7 @@ public class BlackjackGameCommand implements SlashCommandHandler, ButtonHandler,
         String label = event.getButton().getLabel();
         if (label.equals("JOIN")) {
             if (blackjackController.containsUserId(id, user)) {
-                event.reply("You havel already joined").setEphemeral(true).queue();
+                event.reply("You have already joined").setEphemeral(true).queue();
                 return;
             }
         }

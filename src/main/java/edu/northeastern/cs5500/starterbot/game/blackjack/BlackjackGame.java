@@ -16,6 +16,7 @@ import lombok.EqualsAndHashCode;
 public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
     private Deck deck;
     private BlackjackDealer dealer;
+
     /**
      * Constructs a BlackjackGame instance with the specified Config and holder.
      *
@@ -38,6 +39,7 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
             }
         }
     }
+
     /**
      * Checks if the game contains the specified discord ID.
      *
@@ -52,6 +54,7 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
         }
         return false;
     }
+
     /** Adds a card to the current player's hand. */
     public void hit() {
         Card card = deck.shuffleDeal();
@@ -62,6 +65,7 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
     public void stand() {
         getCurrentPlayer().setStop(true);
     }
+
     /** surrender game */
     public void surrender() {
         double bet = getCurrentPlayer().getBet() / 2;
@@ -69,10 +73,16 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
         while (!getCurrentPlayer().getHand().isBust())
             getCurrentPlayer().addCard(new Card(Rank.KING, Suit.CLUBS));
     }
-    /** double down the bets */
-    public void doubledown() {
+
+    /**
+     * double down the bets
+     *
+     * @return bet amount
+     */
+    public double doubledown() {
         double bet = getCurrentPlayer().getBet() * 2;
         getCurrentPlayer().setBet(bet);
+        return bet;
     }
 
     /**
