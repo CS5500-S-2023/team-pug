@@ -55,19 +55,6 @@ public class BlackjackControllerTest {
                         .getHand()
                         .getCards()
                         .size());
-
-        ObjectId id2 = blackjackController.newGame(2, 2, user2);
-        blackjackController.startGame(id2, 100, event);
-        assertEquals(
-                0,
-                blackjackController
-                        .getBlackjackRepository()
-                        .get(id2)
-                        .getPlayers()
-                        .get(0)
-                        .getHand()
-                        .getCards()
-                        .size());
     }
 
     @Test

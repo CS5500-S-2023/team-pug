@@ -23,20 +23,21 @@ public class BlackjackView {
                         .setColor(Color.BLUE);
         Button hit = Button.primary(BLACKJACK_GAME_NAME + ":HIT" + ":" + id + ":" + userId, "HIT");
         Button stand =
-                Button.primary(BLACKJACK_GAME_NAME + ":STAND" + ":" + id + ":" + userId, "STAND");
+                Button.secondary(BLACKJACK_GAME_NAME + ":STAND" + ":" + id + ":" + userId, "STAND");
         Button doubleDown =
-                Button.primary(
+                Button.success(
                         BLACKJACK_GAME_NAME + ":DOUBLEDOWN" + ":" + id + ":" + userId,
                         "DOUBLE DOWN");
-        Button surrender =
-                Button.primary(
-                        BLACKJACK_GAME_NAME + ":SURRENDER" + ":" + id + ":" + userId, "SURRENDER");
+
         Button showCard =
                 Button.primary(
                         BLACKJACK_GAME_NAME + ":SHOWCARD" + ":" + id + ":" + userId, "SHOW CARD");
+        Button surrender =
+                Button.danger(
+                        BLACKJACK_GAME_NAME + ":SURRENDER" + ":" + id + ":" + userId, "SURRENDER");
         return new MessageCreateBuilder()
                 .addEmbeds(embedBuilder.build())
-                .addActionRow(hit, stand, doubleDown, surrender, showCard);
+                .addActionRow(hit, stand, doubleDown, showCard, surrender);
     }
 
     public static MessageCreateBuilder createBlackjackResultMessageBuilder(List<Result> results) {

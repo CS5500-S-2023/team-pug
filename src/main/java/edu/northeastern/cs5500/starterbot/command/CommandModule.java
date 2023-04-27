@@ -69,7 +69,8 @@ public class CommandModule {
 
     @Provides
     @IntoSet
-    public SlashCommandHandler provideSlotMachineGameSlashCommand(SlotMachineGameCommand gameCommand) {
+    public SlashCommandHandler provideSlotMachineGameSlashCommand(
+            SlotMachineGameCommand gameCommand) {
         return gameCommand;
     }
 
@@ -84,5 +85,4 @@ public class CommandModule {
     public ModalHandler provideSlotMachineGameModalCommand(SlotMachineGameCommand gameCommand) {
         return gameCommand;
     }
-
 }

@@ -26,14 +26,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class SlotMachineGameCommand implements SlashCommandHandler, ButtonHandler, ModalHandler {
 
-    @Inject
-    SlotMachineController slotMachineController;
-    @Inject
-    PlayerController playerController;
+    @Inject SlotMachineController slotMachineController;
+    @Inject PlayerController playerController;
 
     @Inject
-    public SlotMachineGameCommand() {
-    }
+    public SlotMachineGameCommand() {}
 
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
@@ -41,24 +38,26 @@ public class SlotMachineGameCommand implements SlashCommandHandler, ButtonHandle
         ObjectId id = new ObjectId(event.getButton().getId().split(":")[2]);
         String gameName = event.getButton().getId().split(":")[3];
         String label = event.getButton().getLabel();
-        TextInput bet = TextInput.create("sub", "Your Bet", TextInputStyle.SHORT)
-                .setMinLength(1)
-                .setRequired(true)
-                .build();
+        TextInput bet =
+                TextInput.create("sub", "Your Bet", TextInputStyle.SHORT)
+                        .setMinLength(1)
+                        .setRequired(true)
+                        .build();
 
-        Modal modal = Modal.create(
-                this.getName()
-                        + ":"
-                        + user.getId()
-                        + ":"
-                        + id
-                        + ":"
-                        + gameName
-                        + ":"
-                        + label,
-                "Bet")
-                .addActionRows(ActionRow.of(bet))
-                .build();
+        Modal modal =
+                Modal.create(
+                                this.getName()
+                                        + ":"
+                                        + user.getId()
+                                        + ":"
+                                        + id
+                                        + ":"
+                                        + gameName
+                                        + ":"
+                                        + label,
+                                "Bet")
+                        .addActionRows(ActionRow.of(bet))
+                        .build();
         event.replyModal(modal).queue();
     }
 
@@ -95,8 +94,7 @@ public class SlotMachineGameCommand implements SlashCommandHandler, ButtonHandle
     }
 
     private boolean checkBets(double bet, Player player) {
-        if (player.getBalance() < bet || bet <= 0)
-            return false;
+        if (player.getBalance() < bet || bet <= 0) return false;
         return true;
     }
 
@@ -106,15 +104,16 @@ public class SlotMachineGameCommand implements SlashCommandHandler, ButtonHandle
         User gameStarter = event.getUser();
         ObjectId gameId = null;
         File file = null;
-        EmbedBuilder embedBuilder = new EmbedBuilder()
-                .setTitle(gameName)
-                .setDescription(gameStarter.getAsMention() + "start a new game")
-                .setColor(Color.BLUE);
+        EmbedBuilder embedBuilder =
+                new EmbedBuilder()
+                        .setTitle(gameName)
+                        .setDescription(gameStarter.getAsMention() + "start a new game")
+                        .setColor(Color.BLUE);
         MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder();
         messageCreateBuilder.addEmbeds(embedBuilder.build());
         gameId = slotMachineController.newGame(gameStarter);
-        Button start = Button.danger(
-                this.getName() + ":start" + ":" + gameId + ":" + gameName, "START");
+        Button start =
+                Button.danger(this.getName() + ":start" + ":" + gameId + ":" + gameName, "START");
 
         messageCreateBuilder.addActionRow(start);
         return messageCreateBuilder;

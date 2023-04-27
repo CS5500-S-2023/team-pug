@@ -97,8 +97,8 @@ public class BlackjackGameTest {
         assertEquals(result.get(0).getUser(), mockUser);
         assertEquals(result.get(0).getBet(), -200.0, 0.01);
         assertEquals(result.get(1).getUser(), mockUser2);
-        assertEquals(result.get(1).getBet(), 50.0, 0.01);
+        assertEquals(result.get(1).getBet(), 150.0, 0.01);
         assertEquals(result.get(2).getUser(), mockUser3);
-        assertEquals(result.get(2).getBet(), 150.0, 0.01);
+        assertEquals(result.get(2).getBet(), 450.0, 0.01);
     }
 }

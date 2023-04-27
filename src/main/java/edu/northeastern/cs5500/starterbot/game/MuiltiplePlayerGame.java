@@ -24,7 +24,7 @@ public abstract class MuiltiplePlayerGame<T extends IPlayer> extends Game<T> {
         else return true;
     }
 
-    public boolean canJoin(String discordId) {
+    public boolean canJoin() {
         if (players.size() >= config.getMaxPlayers()) return false;
         else return true;
     }

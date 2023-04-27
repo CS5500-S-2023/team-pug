@@ -34,16 +34,12 @@ import org.bson.types.ObjectId;
 @Singleton
 @Slf4j
 public class GameCommand implements SlashCommandHandler, ButtonHandler, ModalHandler {
-    @Inject
-    BlackjackController blackjackController;
-    @Inject
-    SlotMachineController slotMachineController;
-    @Inject
-    PlayerController playerController;
+    @Inject BlackjackController blackjackController;
+    @Inject SlotMachineController slotMachineController;
+    @Inject PlayerController playerController;
 
     @Inject
-    public GameCommand() {
-    }
+    public GameCommand() {}
 
     @Override
     @Nonnull
@@ -99,24 +95,26 @@ public class GameCommand implements SlashCommandHandler, ButtonHandler, ModalHan
                 return;
             }
         }
-        TextInput bet = TextInput.create("sub", "Your Bet", TextInputStyle.SHORT)
-                .setMinLength(1)
-                .setRequired(true)
-                .build();
+        TextInput bet =
+                TextInput.create("sub", "Your Bet", TextInputStyle.SHORT)
+                        .setMinLength(1)
+                        .setRequired(true)
+                        .build();
 
-        Modal modal = Modal.create(
-                this.getName()
-                        + ":"
-                        + user.getId()
-                        + ":"
-                        + id
-                        + ":"
-                        + gameName
-                        + ":"
-                        + label,
-                "Bet")
-                .addActionRows(ActionRow.of(bet))
-                .build();
+        Modal modal =
+                Modal.create(
+                                this.getName()
+                                        + ":"
+                                        + user.getId()
+                                        + ":"
+                                        + id
+                                        + ":"
+                                        + gameName
+                                        + ":"
+                                        + label,
+                                "Bet")
+                        .addActionRows(ActionRow.of(bet))
+                        .build();
         event.replyModal(modal).queue();
     }
 
@@ -162,31 +160,36 @@ public class GameCommand implements SlashCommandHandler, ButtonHandler, ModalHan
         User gameStarter = event.getUser();
         ObjectId gameId = null;
         File file = null;
-        EmbedBuilder embedBuilder = new EmbedBuilder()
-                .setTitle(gameName)
-                .setDescription(gameStarter.getAsMention() + "start a new game")
-                .setColor(Color.BLUE);
+        EmbedBuilder embedBuilder =
+                new EmbedBuilder()
+                        .setTitle(gameName)
+                        .setDescription(gameStarter.getAsMention() + "start a new game")
+                        .setColor(Color.BLUE);
         MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder();
         messageCreateBuilder.addEmbeds(embedBuilder.build());
         if (gameName.equals(BLACKJACK_GAME_NAME)) {
 
             int minNumberOfPlayers = event.getOption("min-players").getAsInt();
             int maxNumberOfPlayers = event.getOption("max-players").getAsInt();
-            gameId = blackjackController.newGame(
-                    minNumberOfPlayers, maxNumberOfPlayers, gameStarter);
+            gameId =
+                    blackjackController.newGame(
+                            minNumberOfPlayers, maxNumberOfPlayers, gameStarter);
 
             embedBuilder.setImage("attachment://blackjack.jpg");
-            Button join = Button.primary(
-                    this.getName() + ":join" + ":" + gameId + ":" + gameName, "JOIN");
-            Button start = Button.danger(
-                    this.getName() + ":start" + ":" + gameId + ":" + gameName, "START");
+            Button join =
+                    Button.primary(
+                            this.getName() + ":join" + ":" + gameId + ":" + gameName, "JOIN");
+            Button start =
+                    Button.danger(
+                            this.getName() + ":start" + ":" + gameId + ":" + gameName, "START");
 
             messageCreateBuilder.addActionRow(join, start);
 
         } else if (gameName.equals(SLOTMACHINE_GAME_NAME)) {
             gameId = slotMachineController.newGame(gameStarter);
-            Button start = Button.danger(
-                    this.getName() + ":start" + ":" + gameId + ":" + gameName, "START");
+            Button start =
+                    Button.danger(
+                            this.getName() + ":start" + ":" + gameId + ":" + gameName, "START");
 
             messageCreateBuilder.addActionRow(start);
         }

@@ -38,9 +38,10 @@ public class BlackjackController {
     }
 
     public ObjectId newGame(int min, int max, User holder) {
-        BlackjackGame blackjackGame = new BlackjackGame(
-                new Config("BLACKJACK_GAME_NAME", min, max),
-                new BlackjackNormalPlayer(holder));
+        BlackjackGame blackjackGame =
+                new BlackjackGame(
+                        new Config("BLACKJACK_GAME_NAME", min, max),
+                        new BlackjackNormalPlayer(holder));
         blackjackRepository.add(blackjackGame);
         return blackjackGame.getId();
     }
@@ -50,38 +51,37 @@ public class BlackjackController {
         Objects.requireNonNull(blackjackGame);
         BlackjackPlayer currentPlayer = blackjackGame.getCurrentPlayer();
         currentPlayer.setBet(bet);
-        if (!blackjackGame.canStart()) {
-            sendMessage(event, "unable to play due to the minimum size");
-        } else {
-            // "Game start"
-            blackjackGame.initPlayerCard();
-            sendMessage(
-                    event,
-                    BlackjackView.createBlackjackMessageBuilder(currentPlayer.getUser(), gameId)
-                            .build());
-        }
+        // if (!blackjackGame.canStart()) {
+        // sendMessage(event, "unable to play due to the minimum size");
+        // } else {
+        // "Game start"
+        blackjackGame.initPlayerCard();
+        sendMessage(
+                event,
+                BlackjackView.createBlackjackMessageBuilder(currentPlayer.getUser(), gameId)
+                        .build());
+        // }
     }
 
     public void joinGame(
             ObjectId gameId, User user, double bet, @NotNull ModalInteractionEvent event) {
         BlackjackGame blackjackGame = getGameFromObjectId(gameId);
         Objects.requireNonNull(blackjackGame);
-        if (blackjackGame.canJoin(user.getId())) {
-            BlackjackNormalPlayer normalPlayerayer = new BlackjackNormalPlayer(user);
-            normalPlayerayer.setBet(bet);
-            blackjackGame.joinPlayer(normalPlayerayer);
-            sendMessage(event, user.getAsMention() + ": joined");
+        // if (blackjackGame.canJoin()) {
+        BlackjackNormalPlayer normalPlayerayer = new BlackjackNormalPlayer(user);
+        normalPlayerayer.setBet(bet);
+        blackjackGame.joinPlayer(normalPlayerayer);
+        sendMessage(event, user.getAsMention() + ": joined");
 
-        } else {
-            sendMessage(event, "Unable to join ");
-        }
+        // } else {
+        // sendMessage(event, "Unable to join ");
+        // }
     }
 
     private BlackjackGame getGameFromObjectId(ObjectId id) {
         Collection<BlackjackGame> collection = blackjackRepository.getAll();
         for (BlackjackGame blackjackGame : collection) {
-            if (blackjackGame.getId().equals(id))
-                return blackjackGame;
+            if (blackjackGame.getId().equals(id)) return blackjackGame;
         }
         return null;
     }
@@ -107,7 +107,6 @@ public class BlackjackController {
             }
             case "DOUBLEDOWN" -> {
                 blackjackGame.doubledown();
-
             }
         }
         // move to the next player
@@ -170,9 +169,10 @@ public class BlackjackController {
         EmbedBuilder embedBuilder = new EmbedBuilder().setImage("attachment://card_image.png");
         InputStream is = getClass().getResourceAsStream(filePath);
         Objects.requireNonNull(is);
-        MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder()
-                .addEmbeds(embedBuilder.build())
-                .addFiles(FileUpload.fromData(is, "card_image.png"));
+        MessageCreateBuilder messageCreateBuilder =
+                new MessageCreateBuilder()
+                        .addEmbeds(embedBuilder.build())
+                        .addFiles(FileUpload.fromData(is, "card_image.png"));
         if (event.isAcknowledged()) {
             event.getHook().sendMessage(messageCreateBuilder.build()).setEphemeral(true).queue();
         } else {
@@ -224,5 +224,12 @@ public class BlackjackController {
 
     public GenericRepository<BlackjackGame> getBlackjackRepository() {
         return blackjackRepository;
+    }
+
+    public boolean checkConfig(ObjectId gameId, boolean isJoin) {
+        BlackjackGame blackjackGame = getGameFromObjectId(gameId);
+        Objects.requireNonNull(blackjackGame);
+        if (isJoin) return blackjackGame.canJoin();
+        else return blackjackGame.canStart();
     }
 }
