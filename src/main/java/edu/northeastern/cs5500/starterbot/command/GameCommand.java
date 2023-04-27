@@ -8,7 +8,7 @@ import edu.northeastern.cs5500.starterbot.controller.PlayerController;
 import edu.northeastern.cs5500.starterbot.controller.SlotMachineController;
 import edu.northeastern.cs5500.starterbot.model.Player;
 import java.awt.Color;
-import java.io.File;
+import java.io.InputStream;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -28,6 +28,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.interactions.modals.Modal;
+import net.dv8tion.jda.api.utils.FileUpload;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.bson.types.ObjectId;
 
@@ -215,12 +216,13 @@ public class GameCommand implements SlashCommandHandler, ButtonHandler, ModalHan
         Objects.requireNonNull(gameName);
         User gameStarter = event.getUser();
         ObjectId gameId = null;
-        File file = null;
         EmbedBuilder embedBuilder =
                 new EmbedBuilder()
                         .setTitle(gameName)
                         .setDescription(gameStarter.getAsMention() + "start a new game")
+                        .setImage("attachment://cover_image.png")
                         .setColor(Color.BLUE);
+
         MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder();
         messageCreateBuilder.addEmbeds(embedBuilder.build());
         if (gameName.equals(BLACKJACK_GAME_NAME)) {
@@ -231,23 +233,31 @@ public class GameCommand implements SlashCommandHandler, ButtonHandler, ModalHan
                     blackjackController.newGame(
                             minNumberOfPlayers, maxNumberOfPlayers, gameStarter);
 
-            embedBuilder.setImage("attachment://blackjack.jpg");
+            // embedBuilder.setImage("attachment://blackjack.jpg");
             Button join =
                     Button.primary(
                             this.getName() + ":join" + ":" + gameId + ":" + gameName, "JOIN");
             Button start =
                     Button.danger(
                             this.getName() + ":start" + ":" + gameId + ":" + gameName, "START");
-
-            messageCreateBuilder.addActionRow(join, start);
+            String filePath = "/blackjack.png";
+            InputStream is = getClass().getResourceAsStream(filePath);
+            Objects.requireNonNull(is);
+            messageCreateBuilder
+                    .addFiles(FileUpload.fromData(is, "cover_image.png"))
+                    .addActionRow(join, start);
 
         } else if (gameName.equals(SLOTMACHINE_GAME_NAME)) {
             gameId = slotMachineController.newGame(gameStarter);
             Button start =
                     Button.danger(
                             this.getName() + ":start" + ":" + gameId + ":" + gameName, "START");
-
-            messageCreateBuilder.addActionRow(start);
+            String filePath = "/slotMachine.png";
+            InputStream is = getClass().getResourceAsStream(filePath);
+            Objects.requireNonNull(is);
+            messageCreateBuilder
+                    .addFiles(FileUpload.fromData(is, "cover_image.png"))
+                    .addActionRow(start);
         }
 
         return messageCreateBuilder;
