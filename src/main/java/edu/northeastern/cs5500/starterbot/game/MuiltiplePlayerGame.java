@@ -20,6 +20,7 @@ public abstract class MuiltiplePlayerGame<T extends IPlayer> extends Game<T> {
         joinPlayer(holder);
         currentIndex = 0;
     }
+
     public boolean canStart() {
         if (players.size() < config.getMinPlayers()) return false;
         else return true;
