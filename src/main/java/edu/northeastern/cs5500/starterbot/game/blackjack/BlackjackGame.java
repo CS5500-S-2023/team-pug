@@ -5,18 +5,30 @@ import edu.northeastern.cs5500.starterbot.game.MuiltiplePlayerGame;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+/**
+ * BlackjackGame class represents a game of Blackjack. It extends the MuiltiplePlayerGame abstract
+ * class with specific game logic for Blackjack.
+ */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
     private Deck deck;
     private BlackjackDealer dealer;
-
+    /**
+     * Constructs a BlackjackGame instance with the specified Config and holder.
+     *
+     * @param config A Config object representing the game configuration.
+     * @param holder A BlackjackPlayer object representing the game holder.
+     */
     public BlackjackGame(Config config, BlackjackPlayer holder) {
         super(config, holder);
         this.deck = new Deck();
         this.dealer = new BlackjackDealer(holder.getUser(), holder.getBet());
     }
 
+    /** Initializes the players' cards by dealing two cards to each player. */
     public void initPlayerCard() {
         int initialCardSize = 2;
         for (BlackjackPlayer blackjackPlayer : players) {
@@ -26,7 +38,12 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
             }
         }
     }
-
+    /**
+     * Checks if the game contains the specified discord ID.
+     *
+     * @param discordId A String representing the discord ID to check.
+     * @return A boolean value. True if the game contains the specified discord ID, false otherwise.
+     */
     public boolean containsId(String discordId) {
         for (BlackjackPlayer player : players) {
             if (player.getUser().getId().equals(discordId)) {
@@ -35,16 +52,21 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
         }
         return false;
     }
-
+    /** Adds a card to the current player's hand. */
     public void hit() {
         Card card = deck.shuffleDeal();
         getCurrentPlayer().addCard(card);
     }
 
+    /** Sets the current player's status to stop. */
     public void stand() {
         getCurrentPlayer().setStop(true);
     }
-
+    /**
+     * Distributes the bets among the winners and calculates the results.
+     *
+     * @return A List of Result objects representing the game results.
+     */
     public List<Result> shareAllBets() {
         double sharedTotalBets = 0;
         double winnerTotalBets = 0;

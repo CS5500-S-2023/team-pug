@@ -31,16 +31,24 @@ import net.dv8tion.jda.api.interactions.modals.Modal;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.bson.types.ObjectId;
 
+/**
+ * GameCommand class handles slash commands and button interactions for games. It implements
+ * SlashCommandHandler, ButtonHandler, and ModalHandler interfaces.
+ */
 @Singleton
 @Slf4j
 public class GameCommand implements SlashCommandHandler, ButtonHandler, ModalHandler {
     @Inject BlackjackController blackjackController;
     @Inject SlotMachineController slotMachineController;
     @Inject PlayerController playerController;
-
+    /** Constructs a new instance of GameCommand. */
     @Inject
     public GameCommand() {}
-
+    /**
+     * Returns the command data for the game.
+     *
+     * @return A CommandData object representing the game command data.
+     */
     @Override
     @Nonnull
     public CommandData getCommandData() {
@@ -60,13 +68,21 @@ public class GameCommand implements SlashCommandHandler, ButtonHandler, ModalHan
                         "Maximum number of players (for Blackjack)",
                         false);
     }
-
+    /**
+     * Returns the name of the game command.
+     *
+     * @return A String representing the name of the game command.
+     */
     @Override
     @Nonnull
     public String getName() {
         return "game";
     }
-
+    /**
+     * Handles slash command interactions for the game.
+     *
+     * @param event A SlashCommandInteractionEvent representing the slash command interaction event.
+     */
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
         log.info("event: /game");
@@ -82,7 +98,11 @@ public class GameCommand implements SlashCommandHandler, ButtonHandler, ModalHan
             event.reply(createStartGameMessageBuilder(event).build()).queue();
         }
     }
-
+    /**
+     * Handles button interactions for the game.
+     *
+     * @param event A ButtonInteractionEvent representing the button interaction event.
+     */
     @Override
     public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
         User user = event.getUser();
@@ -117,7 +137,11 @@ public class GameCommand implements SlashCommandHandler, ButtonHandler, ModalHan
                         .build();
         event.replyModal(modal).queue();
     }
-
+    /**
+     * Handles modal interactions for the game.
+     *
+     * @param event A ModalInteractionEvent representing the modal interaction event.
+     */
     @Override
     public void onModalInteraction(@Nonnull ModalInteractionEvent event) {
         String userId = event.getModalId().split(":")[1];
@@ -132,19 +156,32 @@ public class GameCommand implements SlashCommandHandler, ButtonHandler, ModalHan
                     if (label.equals("JOIN")) {
                         Objects.requireNonNull(event.getUser());
                         blackjackController.joinGame(gameId, event.getUser(), bet, event);
+                        sendBetMessage(event, bet);
                     } else {
-                        blackjackController.startGame(gameId, bet, event);
+                        if (blackjackController.canStart(gameId)) {
+                            blackjackController.startGame(gameId, bet, event);
+                            sendBetMessage(event, bet);
+                        } else {
+                            if (event.isAcknowledged()) {
+                                event.getHook()
+                                        .sendMessage(
+                                                "please wait until the number of players meet requirement")
+                                        .setEphemeral(true)
+                                        .queue();
+                            } else {
+                                event.reply(
+                                                "please wait until the number of players meet requirement")
+                                        .setEphemeral(true)
+                                        .queue();
+                            }
+                        }
                     }
 
                 } else if (gameName.equals(SLOTMACHINE_GAME_NAME)) {
                     slotMachineController.startGame(gameId, bet, event);
+                    sendBetMessage(event, bet);
                 }
 
-                if (event.isAcknowledged()) {
-                    event.getHook().sendMessage("You bet" + bet + "$").setEphemeral(true).queue();
-                } else {
-                    event.reply("You bet" + bet + "$").setEphemeral(true).queue();
-                }
             } else if (player.getBalance() < bet) {
                 event.reply("bet is larger than balance").setEphemeral(true).queue();
             } else if (bet < 0) {
@@ -152,7 +189,26 @@ public class GameCommand implements SlashCommandHandler, ButtonHandler, ModalHan
             }
         }
     }
-
+    /**
+     * Sends a bet message in response to a modal interaction event.
+     *
+     * @param event A ModalInteractionEvent representing the modal interaction event.
+     * @param bet The bet amount as a double.
+     */
+    private void sendBetMessage(@Nonnull ModalInteractionEvent event, double bet) {
+        if (event.isAcknowledged()) {
+            event.getHook().sendMessage("You bet" + bet + "$").setEphemeral(true).queue();
+        } else {
+            event.reply("You bet" + bet + "$").setEphemeral(true).queue();
+        }
+    }
+    /**
+     * Creates a MessageCreateBuilder for starting a game based on the provided
+     * SlashCommandInteractionEvent.
+     *
+     * @param event A SlashCommandInteractionEvent representing the slash command interaction event.
+     * @return A MessageCreateBuilder containing the game start message.
+     */
     private MessageCreateBuilder createStartGameMessageBuilder(
             @Nonnull SlashCommandInteractionEvent event) {
         String gameName = event.getOption("game-name").getAsString();
