@@ -20,6 +20,7 @@ public abstract class MuiltiplePlayerGame<T extends IPlayer> extends Game<T> {
     @Inject PlayerController playerController;
     protected int currentIndex;
     protected List<T> players;
+
     /**
      * Constructs a new MuiltiplePlayerGame with the given configuration and initial player.
      *
@@ -32,6 +33,7 @@ public abstract class MuiltiplePlayerGame<T extends IPlayer> extends Game<T> {
         joinPlayer(holder);
         currentIndex = 0;
     }
+
     /**
      * Checks if the game can be started based on the minimum number of players.
      *
@@ -41,13 +43,13 @@ public abstract class MuiltiplePlayerGame<T extends IPlayer> extends Game<T> {
         if (players.size() < config.getMinPlayers()) return false;
         else return true;
     }
+
     /**
      * Checks if a player can join the game based on the maximum number of players.
      *
-     * @param discordId the discordId of the player.
      * @return true if the player can join, false otherwise.
      */
-    public boolean canJoin(String discordId) {
+    public boolean canJoin() {
         if (players.size() >= config.getMaxPlayers()) return false;
         else return true;
     }
@@ -60,6 +62,7 @@ public abstract class MuiltiplePlayerGame<T extends IPlayer> extends Game<T> {
     public void joinPlayer(T player) {
         players.add(player);
     }
+
     /**
      * Removes a player from the game.
      *
@@ -68,6 +71,7 @@ public abstract class MuiltiplePlayerGame<T extends IPlayer> extends Game<T> {
     public void removePlayer(T t) {
         players.remove(t);
     }
+
     /**
      * Checks if the end of the round has been reached.
      *
@@ -93,6 +97,7 @@ public abstract class MuiltiplePlayerGame<T extends IPlayer> extends Game<T> {
             currentIndex = (currentIndex + 1) % players.size();
         return players.get(currentIndex);
     }
+
     /**
      * Returns the current player in the rotation.
      *

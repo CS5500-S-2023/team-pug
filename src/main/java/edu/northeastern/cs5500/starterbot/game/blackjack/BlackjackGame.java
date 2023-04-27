@@ -62,6 +62,19 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
     public void stand() {
         getCurrentPlayer().setStop(true);
     }
+    /** surrender game */
+    public void surrender() {
+        double bet = getCurrentPlayer().getBet() / 2;
+        getCurrentPlayer().setBet(bet);
+        while (!getCurrentPlayer().getHand().isBust())
+            getCurrentPlayer().addCard(new Card(Rank.KING, Suit.CLUBS));
+    }
+    /** double down the bets */
+    public void doubledown() {
+        double bet = getCurrentPlayer().getBet() * 2;
+        getCurrentPlayer().setBet(bet);
+    }
+
     /**
      * Distributes the bets among the winners and calculates the results.
      *
@@ -85,7 +98,8 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
                 gameResults.add(
                         new Result(
                                 player.getUser(),
-                                player.getBet() / winnerTotalBets * sharedTotalBets));
+                                player.getBet()
+                                        + player.getBet() / winnerTotalBets * sharedTotalBets));
             } else {
                 gameResults.add(new Result(player.getUser(), -player.getBet()));
             }

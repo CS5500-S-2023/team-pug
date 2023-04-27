@@ -51,16 +51,16 @@ public class BlackjackController {
         Objects.requireNonNull(blackjackGame);
         BlackjackPlayer currentPlayer = blackjackGame.getCurrentPlayer();
         currentPlayer.setBet(bet);
-        if (!blackjackGame.canStart()) {
-            sendMessage(event, "unable to play due to the minimum size");
-        } else {
-            // "Game start"
-            blackjackGame.initPlayerCard();
-            sendMessage(
-                    event,
-                    BlackjackView.createBlackjackMessageBuilder(currentPlayer.getUser(), gameId)
-                            .build());
-        }
+        // if (!blackjackGame.canStart()) {
+        // sendMessage(event, "unable to play due to the minimum size");
+        // } else {
+        // "Game start"
+        blackjackGame.initPlayerCard();
+        sendMessage(
+                event,
+                BlackjackView.createBlackjackMessageBuilder(currentPlayer.getUser(), gameId)
+                        .build());
+        // }
     }
 
     public boolean canStart(ObjectId gameId) {
@@ -73,15 +73,15 @@ public class BlackjackController {
             ObjectId gameId, User user, double bet, @NotNull ModalInteractionEvent event) {
         BlackjackGame blackjackGame = getGameFromObjectId(gameId);
         Objects.requireNonNull(blackjackGame);
-        if (blackjackGame.canJoin(user.getId())) {
-            BlackjackNormalPlayer normalPlayerayer = new BlackjackNormalPlayer(user);
-            normalPlayerayer.setBet(bet);
-            blackjackGame.joinPlayer(normalPlayerayer);
-            sendMessage(event, user.getAsMention() + ": joined");
+        // if (blackjackGame.canJoin()) {
+        BlackjackNormalPlayer normalPlayerayer = new BlackjackNormalPlayer(user);
+        normalPlayerayer.setBet(bet);
+        blackjackGame.joinPlayer(normalPlayerayer);
+        sendMessage(event, user.getAsMention() + ": joined");
 
-        } else {
-            sendMessage(event, "Unable to join ");
-        }
+        // } else {
+        // sendMessage(event, "Unable to join ");
+        // }
     }
 
     private BlackjackGame getGameFromObjectId(ObjectId id) {
@@ -103,18 +103,16 @@ public class BlackjackController {
                 return;
             }
             case "HIT" -> {
-                // add a new card
                 blackjackGame.hit();
             }
             case "SURRENDER" -> {
-                // TODO surrender, end the game
+                blackjackGame.surrender();
             }
             case "STAND" -> {
                 blackjackGame.stand();
             }
             case "DOUBLEDOWN" -> {
-                // TODO double the bet
-
+                blackjackGame.doubledown();
             }
         }
         // move to the next player
@@ -232,5 +230,12 @@ public class BlackjackController {
 
     public GenericRepository<BlackjackGame> getBlackjackRepository() {
         return blackjackRepository;
+    }
+
+    public boolean checkConfig(ObjectId gameId, boolean isJoin) {
+        BlackjackGame blackjackGame = getGameFromObjectId(gameId);
+        Objects.requireNonNull(blackjackGame);
+        if (isJoin) return blackjackGame.canJoin();
+        else return blackjackGame.canStart();
     }
 }
