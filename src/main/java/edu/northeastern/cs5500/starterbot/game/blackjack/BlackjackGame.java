@@ -45,6 +45,19 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
         getCurrentPlayer().setStop(true);
     }
 
+    public void surrender() {
+        double bet = getCurrentPlayer().getBet() / 2;
+        getCurrentPlayer().setBet(bet);
+        while (!getCurrentPlayer().getHand().isBust())
+            getCurrentPlayer().addCard(new Card(Rank.KING, Suit.CLUBS));
+
+    }
+
+    public void doubledown() {
+        double bet = getCurrentPlayer().getBet() * 2;
+        getCurrentPlayer().setBet(bet);
+    }
+
     public List<Result> shareAllBets() {
         double sharedTotalBets = 0;
         double winnerTotalBets = 0;
@@ -54,8 +67,10 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
                 maxValue = Math.max(maxValue, player.getHand().getCurrentValue());
         }
         for (BlackjackPlayer player : players) {
-            if (player.getHand().getCurrentValue() != maxValue) sharedTotalBets += player.getBet();
-            else winnerTotalBets += player.getBet();
+            if (player.getHand().getCurrentValue() != maxValue)
+                sharedTotalBets += player.getBet();
+            else
+                winnerTotalBets += player.getBet();
         }
         List<Result> gameResults = new ArrayList<>();
         for (BlackjackPlayer player : players) {
@@ -63,7 +78,7 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
                 gameResults.add(
                         new Result(
                                 player.getUser(),
-                                player.getBet() / winnerTotalBets * sharedTotalBets));
+                                player.getBet() + player.getBet() / winnerTotalBets * sharedTotalBets));
             } else {
                 gameResults.add(new Result(player.getUser(), -player.getBet()));
             }

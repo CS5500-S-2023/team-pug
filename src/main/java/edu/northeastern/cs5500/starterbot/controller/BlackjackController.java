@@ -38,10 +38,9 @@ public class BlackjackController {
     }
 
     public ObjectId newGame(int min, int max, User holder) {
-        BlackjackGame blackjackGame =
-                new BlackjackGame(
-                        new Config("BLACKJACK_GAME_NAME", min, max),
-                        new BlackjackNormalPlayer(holder));
+        BlackjackGame blackjackGame = new BlackjackGame(
+                new Config("BLACKJACK_GAME_NAME", min, max),
+                new BlackjackNormalPlayer(holder));
         blackjackRepository.add(blackjackGame);
         return blackjackGame.getId();
     }
@@ -81,7 +80,8 @@ public class BlackjackController {
     private BlackjackGame getGameFromObjectId(ObjectId id) {
         Collection<BlackjackGame> collection = blackjackRepository.getAll();
         for (BlackjackGame blackjackGame : collection) {
-            if (blackjackGame.getId().equals(id)) return blackjackGame;
+            if (blackjackGame.getId().equals(id))
+                return blackjackGame;
         }
         return null;
     }
@@ -97,17 +97,16 @@ public class BlackjackController {
                 return;
             }
             case "HIT" -> {
-                // add a new card
                 blackjackGame.hit();
             }
             case "SURRENDER" -> {
-                // TODO surrender, end the game
+                blackjackGame.surrender();
             }
             case "STAND" -> {
                 blackjackGame.stand();
             }
             case "DOUBLEDOWN" -> {
-                // TODO double the bet
+                blackjackGame.doubledown();
 
             }
         }
@@ -171,10 +170,9 @@ public class BlackjackController {
         EmbedBuilder embedBuilder = new EmbedBuilder().setImage("attachment://card_image.png");
         InputStream is = getClass().getResourceAsStream(filePath);
         Objects.requireNonNull(is);
-        MessageCreateBuilder messageCreateBuilder =
-                new MessageCreateBuilder()
-                        .addEmbeds(embedBuilder.build())
-                        .addFiles(FileUpload.fromData(is, "card_image.png"));
+        MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder()
+                .addEmbeds(embedBuilder.build())
+                .addFiles(FileUpload.fromData(is, "card_image.png"));
         if (event.isAcknowledged()) {
             event.getHook().sendMessage(messageCreateBuilder.build()).setEphemeral(true).queue();
         } else {

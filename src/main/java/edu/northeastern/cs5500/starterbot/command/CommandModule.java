@@ -48,4 +48,41 @@ public class CommandModule {
     public ButtonHandler provideSlotMachineCommand(SlotMachineCommand slotMachineCommand) {
         return slotMachineCommand;
     }
+
+    @Provides
+    @IntoSet
+    public SlashCommandHandler provideBlackjackGameSlashCommand(BlackjackGameCommand gameCommand) {
+        return gameCommand;
+    }
+
+    @Provides
+    @IntoSet
+    public ButtonHandler provideBlackjackGameButtonCommand(BlackjackGameCommand gameCommand) {
+        return gameCommand;
+    }
+
+    @Provides
+    @IntoSet
+    public ModalHandler provideBlackjackGameModalCommand(BlackjackGameCommand gameCommand) {
+        return gameCommand;
+    }
+
+    @Provides
+    @IntoSet
+    public SlashCommandHandler provideSlotMachineGameSlashCommand(SlotMachineGameCommand gameCommand) {
+        return gameCommand;
+    }
+
+    @Provides
+    @IntoSet
+    public ButtonHandler provideSlotMachineGameButtonCommand(SlotMachineGameCommand gameCommand) {
+        return gameCommand;
+    }
+
+    @Provides
+    @IntoSet
+    public ModalHandler provideSlotMachineGameModalCommand(SlotMachineGameCommand gameCommand) {
+        return gameCommand;
+    }
+
 }
