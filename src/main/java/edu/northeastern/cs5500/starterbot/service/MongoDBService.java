@@ -15,10 +15,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
+/**
+ * MongoDBService is a singleton class responsible for establishing a connection to the MongoDB
+ * database and providing access to its instance.
+ */
 @Singleton
 @Slf4j
 public class MongoDBService implements Service {
-
+    /**
+     * Retrieves the MongoDB connection URI from the environment variable or returns a default
+     * connection string for local development.
+     *
+     * @return A String representing the MongoDB connection URI.
+     */
     static String getDatabaseURI() {
         ProcessBuilder processBuilder = new ProcessBuilder();
         final String databaseURI = processBuilder.environment().get("MONGODB_URI");
@@ -27,9 +36,12 @@ public class MongoDBService implements Service {
         }
         return "mongodb://localhost:27017/Stuff"; // connect to localhost by default
     }
-
+    /** The instance of the connected MongoDatabase. */
     @Getter private MongoDatabase mongoDatabase;
-
+    /**
+     * Constructs a MongoDBService instance and connects to the MongoDB database using the
+     * connection URI obtained from the environment variable or a default value.
+     */
     @Inject
     public MongoDBService() {
         CodecRegistry codecRegistry =
@@ -48,7 +60,7 @@ public class MongoDBService implements Service {
         MongoClient mongoClient = MongoClients.create(mongoClientSettings);
         mongoDatabase = mongoClient.getDatabase(connectionString.getDatabase());
     }
-
+    /** Registers the MongoDBService instance. */
     @Override
     public void register() {
         log.info("MongoDBService > register");
