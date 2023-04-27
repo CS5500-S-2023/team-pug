@@ -10,23 +10,41 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * SlotMachineCommand class is responsible for handling button interactions related to the Slot
+ * Machine game in the Discord bot.
+ */
 @Singleton
 @Slf4j
 public class SlotMachineCommand implements ButtonHandler {
 
     private SlotMachineController slotMachineController;
 
+    /**
+     * Constructs a SlotMachineCommand instance with the specified SlotMachineController.
+     *
+     * @param slotMachineController A SlotMachineController object responsible for managing the Slot
+     *     Machine game.
+     */
     @Inject
     public SlotMachineCommand(SlotMachineController slotMachineController) {
         this.slotMachineController = slotMachineController;
     }
-
+    /**
+     * Returns the name of the Slot Machine game.
+     *
+     * @return A non-null string representing the name of the Slot Machine game.
+     */
     @NotNull
     @Override
     public String getName() {
         return SLOTMACHINE_GAME_NAME;
     }
-
+    /**
+     * Handles button interactions related to the Slot Machine game.
+     *
+     * @param event A non-null ButtonInteractionEvent object representing the button interaction.
+     */
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         // accept actions for blackjack and pass to controller

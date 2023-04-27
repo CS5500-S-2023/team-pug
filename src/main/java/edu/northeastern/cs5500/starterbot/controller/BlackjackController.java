@@ -63,6 +63,12 @@ public class BlackjackController {
         // }
     }
 
+    public boolean canStart(ObjectId gameId) {
+        BlackjackGame blackjackGame = getGameFromObjectId(gameId);
+        Objects.requireNonNull(blackjackGame);
+        return blackjackGame.canStart();
+    }
+
     public void joinGame(
             ObjectId gameId, User user, double bet, @NotNull ModalInteractionEvent event) {
         BlackjackGame blackjackGame = getGameFromObjectId(gameId);

@@ -11,8 +11,19 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.bson.types.ObjectId;
 
+/**
+ * BlackjackView is a utility class for creating Discord message builders related to the Blackjack
+ * game. It provides methods for generating game-related messages with appropriate embeds and
+ * buttons.
+ */
 public class BlackjackView {
-
+    /**
+     * Creates a Discord message builder for the initial Blackjack game message.
+     *
+     * @param user the current user playing the game.
+     * @param gameId the ObjectId of the game instance.
+     * @return a MessageCreateBuilder with the game title, description, and action buttons.
+     */
     public static MessageCreateBuilder createBlackjackMessageBuilder(User user, ObjectId gameId) {
         String id = gameId.toString();
         String userId = user.getId();
@@ -39,7 +50,12 @@ public class BlackjackView {
                 .addEmbeds(embedBuilder.build())
                 .addActionRow(hit, stand, doubleDown, showCard, surrender);
     }
-
+    /**
+     * Creates a Discord message builder for the Blackjack game result message.
+     *
+     * @param results a list of Result objects containing user and bet information.
+     * @return a MessageCreateBuilder with the game results as embed fields.
+     */
     public static MessageCreateBuilder createBlackjackResultMessageBuilder(List<Result> results) {
         EmbedBuilder embedBuilder = new EmbedBuilder().setTitle(BLACKJACK_GAME_NAME + " Result");
         for (Result result : results) {

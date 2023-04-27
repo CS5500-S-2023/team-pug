@@ -8,18 +8,31 @@ import javax.inject.Inject;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.bson.types.ObjectId;
 
+/**
+ * BlackjackCommand class handles button interactions for the Blackjack game. It implements the
+ * ButtonHandler interface.
+ */
 public class BlackjackCommand implements ButtonHandler {
     @Inject BlackjackController blackjackController;
-
+    /** Constructs a new instance of BlackjackCommand. */
     @Inject
     public BlackjackCommand() {}
 
+    /**
+     * Returns the name of the game.
+     *
+     * @return A String representing the name of the game.
+     */
     @Override
     @Nonnull
     public String getName() {
         return BLACKJACK_GAME_NAME;
     }
-
+    /**
+     * Handles button interactions for the Blackjack game.
+     *
+     * @param event A ButtonInteractionEvent representing the button interaction event.
+     */
     @Override
     public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
         // accept actions for blackjack and pass to controller
