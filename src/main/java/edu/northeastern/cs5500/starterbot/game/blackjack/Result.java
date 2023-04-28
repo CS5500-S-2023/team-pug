@@ -1,7 +1,6 @@
 package edu.northeastern.cs5500.starterbot.game.blackjack;
 
 import lombok.Data;
-import net.dv8tion.jda.api.entities.User;
 
 /**
  * A class representing the result of a single round of Blackjack. Each result includes the user who
@@ -12,16 +11,17 @@ import net.dv8tion.jda.api.entities.User;
  */
 @Data
 public class Result {
-    private User user;
+    private String discordId;
     private Double bet;
+
     /**
      * Constructs a new instance of the {@code Result} class with the specified user and bet amount.
      *
-     * @param user the user who played the round
+     * @param discordId the user who played the round
      * @param bet the amount of the user's bet
      */
-    public Result(User user, Double bet) {
-        this.user = user;
+    public Result(String discordId, Double bet) {
+        this.discordId = discordId;
         this.bet = bet;
     }
 }

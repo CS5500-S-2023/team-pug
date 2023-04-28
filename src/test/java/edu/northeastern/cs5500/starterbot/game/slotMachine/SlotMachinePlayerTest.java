@@ -2,9 +2,9 @@ package edu.northeastern.cs5500.starterbot.game.slotMachine;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
 
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.internal.entities.UserImpl;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,8 +14,8 @@ public class SlotMachinePlayerTest {
 
     @Before
     public void setUp() {
-        user = mock(User.class);
-        player = new SlotMachinePlayer(user);
+        User user = new UserImpl(1234567890L, null);
+        player = new SlotMachinePlayer(user.getId());
     }
 
     @Test
@@ -26,11 +26,6 @@ public class SlotMachinePlayerTest {
     @Test
     public void testWantPlay() {
         assertTrue(player.wantPlay());
-    }
-
-    @Test
-    public void testUser() {
-        assertEquals(user, player.getUser());
     }
 
     @Test

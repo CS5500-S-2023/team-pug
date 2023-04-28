@@ -18,8 +18,12 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public abstract class MuiltiplePlayerGame<T extends IPlayer> extends Game<T> {
     @Inject PlayerController playerController;
+
     protected int currentIndex;
     protected List<T> players;
+    T holder;
+
+    public MuiltiplePlayerGame() {}
 
     /**
      * Constructs a new MuiltiplePlayerGame with the given configuration and initial player.
@@ -28,7 +32,8 @@ public abstract class MuiltiplePlayerGame<T extends IPlayer> extends Game<T> {
      * @param holder the initial player.
      */
     protected MuiltiplePlayerGame(Config config, T holder) {
-        super(config, holder);
+        super(config);
+        this.holder = holder;
         players = new ArrayList<>();
         joinPlayer(holder);
         currentIndex = 0;
@@ -103,7 +108,4 @@ public abstract class MuiltiplePlayerGame<T extends IPlayer> extends Game<T> {
      *
      * @return the current player.
      */
-    public T getCurrentPlayer() {
-        return players.get(currentIndex);
-    }
 }

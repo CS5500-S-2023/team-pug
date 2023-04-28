@@ -8,6 +8,9 @@ public class Config {
     private String name;
     private int minPlayers;
     private int maxPlayers;
+
+    public Config() {}
+
     /**
      * Constructor for Config that initializes the game with a name and specified minimum and
      * maximum number of players.
@@ -21,6 +24,7 @@ public class Config {
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
     }
+
     /**
      * Constructor for Config that initializes the game with a name and sets the minimum and maximum
      * number of players to 1.

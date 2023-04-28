@@ -18,6 +18,8 @@ import net.dv8tion.jda.internal.utils.tuple.Pair;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class SlotMachineGame extends IndividualGame<SlotMachinePlayer> {
+    public SlotMachineGame() {}
+
     /**
      * Constructs a new SlotMachineGame with the specified configuration and player.
      *
@@ -27,6 +29,7 @@ public class SlotMachineGame extends IndividualGame<SlotMachinePlayer> {
     public SlotMachineGame(Config config, SlotMachinePlayer player) {
         super(config, player);
     }
+
     /**
      * Simulates a play in the slot machine game and returns the resulting symbols and payout.
      *
@@ -49,6 +52,7 @@ public class SlotMachineGame extends IndividualGame<SlotMachinePlayer> {
         String[] symbols = SYMBOLS.keySet().toArray(new String[SYMBOLS.size()]);
         return symbols[new Random().nextInt(symbols.length)];
     }
+
     /**
      * Calculates the payout based on the symbols in the reels.
      *
@@ -57,6 +61,7 @@ public class SlotMachineGame extends IndividualGame<SlotMachinePlayer> {
      */
     private double sumPayouts(String[] reels) {
         double bet = getCurrentPlayer().getBet();
+        System.out.println(bet);
         // Check if all the reels have the same symbol
         if (reels[0].equals(reels[1]) && reels[1].equals(reels[2])) {
             // Multiply the payout by the player's bet

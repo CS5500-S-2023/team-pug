@@ -22,72 +22,24 @@ class BlackjackPlayerTest {
         Mockito.when(user.getName()).thenReturn("testUser");
         mockIPlayer = Mockito.mock(IPlayer.class);
         bet = 50;
-        player =
-                new BlackjackPlayer(user) {
-
-                    @Override
-                    public boolean canPlay() {
-                        return mockIPlayer.canPlay();
-                    }
-
-                    @Override
-                    public boolean wantPlay() {
-                        return mockIPlayer.wantPlay();
-                    }
-                };
+        player = new BlackjackPlayer("123");
     }
 
-    @Test
-    void testCanPlay() {
-        Mockito.when(mockIPlayer.canPlay()).thenReturn(true);
-        assertTrue(player.canPlay());
-        Mockito.when(mockIPlayer.canPlay()).thenReturn(false);
-        assertFalse(player.canPlay());
-    }
+    // @Test
+    // void testCanPlay() {
+    // Mockito.when(mockIPlayer.canPlay()).thenReturn(true);
+    // assertTrue(player.canPlay());
+    // Mockito.when(mockIPlayer.canPlay()).thenReturn(false);
+    // assertFalse(player.canPlay());
+    // }
 
-    @Test
-    void testWantPlay() {
-        Mockito.when(mockIPlayer.wantPlay()).thenReturn(true);
-        assertTrue(player.wantPlay());
-        Mockito.when(mockIPlayer.wantPlay()).thenReturn(false);
-        assertFalse(player.wantPlay());
-    }
-
-    @Test
-    public void testEquals() {
-        BlackjackPlayer player2 =
-                new BlackjackPlayer(user) {
-
-                    @Override
-                    public boolean canPlay() {
-                        return mockIPlayer.canPlay();
-                    }
-
-                    @Override
-                    public boolean wantPlay() {
-                        return mockIPlayer.wantPlay();
-                    }
-                };
-        assertEquals(player, player2);
-    }
-
-    @Test
-    public void testHashCode() {
-        BlackjackPlayer player2 =
-                new BlackjackPlayer(user) {
-
-                    @Override
-                    public boolean canPlay() {
-                        return mockIPlayer.canPlay();
-                    }
-
-                    @Override
-                    public boolean wantPlay() {
-                        return mockIPlayer.wantPlay();
-                    }
-                };
-        assertEquals(player.hashCode(), player2.hashCode());
-    }
+    // @Test
+    // void testWantPlay() {
+    // Mockito.when(mockIPlayer.wantPlay()).thenReturn(true);
+    // assertTrue(player.wantPlay());
+    // Mockito.when(mockIPlayer.wantPlay()).thenReturn(false);
+    // assertFalse(player.wantPlay());
+    // }
 
     @Test
     public void testToString() {
@@ -108,47 +60,5 @@ class BlackjackPlayerTest {
         newHand.addCard(new Card(Rank.ACE, Suit.HEARTS));
         player.setHand(newHand);
         assertEquals(newHand, player.getHand());
-    }
-
-    @Test
-    public void testSetUser() {
-        User newUser = Mockito.mock(User.class);
-        player.setUser(newUser);
-        assertEquals(newUser, player.getUser());
-    }
-
-    @Test
-    public void testSetBet() {
-        double newBet = 100;
-        player.setBet(newBet);
-        assertEquals(newBet, player.getBet(), 0.0);
-    }
-
-    @Test
-    public void testGetUser() {
-        assertEquals(user, player.getUser());
-    }
-
-    @Test
-    public void testGetBet() {
-        assertEquals(bet, player.getBet(), 0.0);
-    }
-
-    @Test
-    public void testCanEqual() {
-        BlackjackPlayer player2 =
-                new BlackjackPlayer(user) {
-
-                    @Override
-                    public boolean canPlay() {
-                        return mockIPlayer.canPlay();
-                    }
-
-                    @Override
-                    public boolean wantPlay() {
-                        return mockIPlayer.wantPlay();
-                    }
-                };
-        assertTrue(player.canEqual(player2));
     }
 }

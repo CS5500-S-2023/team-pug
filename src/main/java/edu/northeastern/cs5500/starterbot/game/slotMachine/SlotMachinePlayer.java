@@ -2,20 +2,26 @@ package edu.northeastern.cs5500.starterbot.game.slotMachine;
 
 import edu.northeastern.cs5500.starterbot.game.IPlayer;
 import lombok.Data;
-import net.dv8tion.jda.api.entities.User;
 
 /** SlotMachinePlayer represents a player participating in a slot machine game. */
 @Data
 public class SlotMachinePlayer implements IPlayer {
-    private User user;
+    // private User user;
+    private String discordId;
     private double bet;
-    /**
-     * Constructs a new SlotMachinePlayer with the specified user.
-     *
-     * @param user the user participating in the game
-     */
-    public SlotMachinePlayer(User user) {
-        this.user = user;
+
+    public SlotMachinePlayer() {}
+
+    // /**
+    // * Constructs a new SlotMachinePlayer with the specified user.
+    // *
+    // * @param user the user participating in the game
+    // */
+    // public SlotMachinePlayer(User user) {
+    // this.user = user;
+    // }
+    public SlotMachinePlayer(String discordId) {
+        this.discordId = discordId;
     }
 
     /**
@@ -27,6 +33,7 @@ public class SlotMachinePlayer implements IPlayer {
     public boolean canPlay() {
         return true;
     }
+
     /**
      * Determines if the player wants to play the game.
      *
