@@ -10,6 +10,8 @@ import lombok.Data;
 public class Card {
     private Rank rank;
     private Suit suit;
+
+    public Card() {}
     /**
      * Constructs a new instance of the {@code Card} class with the specified rank and suit.
      *

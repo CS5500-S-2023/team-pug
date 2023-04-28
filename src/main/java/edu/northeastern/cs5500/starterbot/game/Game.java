@@ -14,10 +14,9 @@ import org.bson.types.ObjectId;
 public abstract class Game<T extends IPlayer> implements Model {
     ObjectId id;
     protected Config config;
-    protected T holder;
 
     /** Default constructor for the Game class. */
-    protected Game() {}
+    public Game() {}
 
     /**
      * Constructor for the Game class that initializes the game with a config and a player holder.
@@ -25,9 +24,8 @@ public abstract class Game<T extends IPlayer> implements Model {
      * @param config The configuration settings for the game.
      * @param holder The player holder for the game.
      */
-    protected Game(Config config, T holder) {
+    protected Game(Config config) {
         this.config = config;
-        this.holder = holder;
     }
 
     /**

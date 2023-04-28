@@ -25,41 +25,74 @@ public class RepositoryModule {
     // NOTE: The presence of commented-out code in your project *will* result in a
     // lowered grade.
 
-    /**
-     * Provides an instance of a repository for storing player information.
-     *
-     * @param repository the in-memory repository instance to be used
-     * @return a generic repository for player information
-     */
+    // /**
+    // * Provides an instance of a repository for storing player information.
+    // *
+    // * @param repository the in-memory repository instance to be used
+    // * @return a generic repository for player information
+    // */
+    // @Provides
+    // public GenericRepository<Player> providePlayerRepository(
+    // InMemoryRepository<Player> repository) {
+    // return repository;
+    // }
+
+    // /**
+    // * Provides an instance of a repository for storing Blackjack game data.
+    // *
+    // * @param repository the in-memory repository instance to be used
+    // * @return a generic repository for Blackjack game data
+    // */
+    // @Provides
+    // public GenericRepository<BlackjackGame> provideBlackjackRepository(
+    // InMemoryRepository<BlackjackGame> repository) {
+    // return repository;
+    // }
+
+    // /**
+    // * Provides an instance of a repository for storing slot machine game data.
+    // *
+    // * @param repository the in-memory repository instance to be used
+    // * @return a generic repository for slot machine game data
+    // */
+    // @Provides
+    // public GenericRepository<SlotMachineGame> provideSlotMachineRepository(
+    // InMemoryRepository<SlotMachineGame> repository) {
+    // return repository;
+    // }
+
     @Provides
-    public GenericRepository<Player> providePlayerRepository(
-            InMemoryRepository<Player> repository) {
+    public GenericRepository<Player> providePlayerRepository(MongoDBRepository<Player> repository) {
         return repository;
     }
 
-    /**
-     * Provides an instance of a repository for storing Blackjack game data.
-     *
-     * @param repository the in-memory repository instance to be used
-     * @return a generic repository for Blackjack game data
-     */
     @Provides
-    public GenericRepository<BlackjackGame> provideBlackjackRepository(
-            InMemoryRepository<BlackjackGame> repository) {
-        return repository;
+    public Class<Player> providePlayer() {
+        return Player.class;
     }
 
-    /**
-     * Provides an instance of a repository for storing slot machine game data.
-     *
-     * @param repository the in-memory repository instance to be used
-     * @return a generic repository for slot machine game data
-     */
     @Provides
     public GenericRepository<SlotMachineGame> provideSlotMachineRepository(
-            InMemoryRepository<SlotMachineGame> repository) {
+            MongoDBRepository<SlotMachineGame> repository) {
         return repository;
     }
+
+    @Provides
+    public Class<SlotMachineGame> provideSlotMachine() {
+        return SlotMachineGame.class;
+    }
+
+    @Provides
+    public GenericRepository<BlackjackGame> provideBlackjackRepository(
+            MongoDBRepository<BlackjackGame> repository) {
+        return repository;
+    }
+
+    @Provides
+    public Class<BlackjackGame> provideBlackjack() {
+        return BlackjackGame.class;
+    }
+
     // @Provides
     // public GenericRepository<UserPreference> provideUserPreferencesRepository(
     // MongoDBRepository<UserPreference> repository) {
@@ -69,16 +102,5 @@ public class RepositoryModule {
     // @Provides
     // public Class<UserPreference> provideUserPreference() {
     // return UserPreference.class;
-    // }
-
-    // @Provides
-    // public GenericRepository<Player>
-    // providePlayerRepository(MongoDBRepository<Player> repository) {
-    // return repository;
-    // }
-
-    // @Provides
-    // public Class<Player> providePlayer() {
-    // return Player.class;
     // }
 }

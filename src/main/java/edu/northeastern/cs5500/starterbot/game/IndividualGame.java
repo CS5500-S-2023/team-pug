@@ -12,6 +12,10 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public abstract class IndividualGame<T extends IPlayer> extends Game<T> {
+    public IndividualGame() {}
+
+    T holder;
+
     /**
      * Constructor for the IndividualGame class that initializes the game with a config and a player
      * holder.
@@ -20,8 +24,10 @@ public abstract class IndividualGame<T extends IPlayer> extends Game<T> {
      * @param holder The player holder for the game.
      */
     protected IndividualGame(Config config, T holder) {
-        super(config, holder);
+        super(config);
+        this.holder = holder;
     }
+
     /**
      * Checks if the game can start.
      *
@@ -30,12 +36,13 @@ public abstract class IndividualGame<T extends IPlayer> extends Game<T> {
     public boolean canStart() {
         return true;
     }
+
     /**
      * Returns the current player participating in the game.
      *
      * @return The current player.
      */
     public T getCurrentPlayer() {
-        return getHolder();
+        return this.getHolder();
     }
 }

@@ -14,8 +14,11 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
+
     private Deck deck;
-    private BlackjackDealer dealer;
+    private BlackjackPlayer dealer;
+
+    public BlackjackGame() {}
 
     /**
      * Constructs a BlackjackGame instance with the specified Config and holder.
@@ -26,7 +29,7 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
     public BlackjackGame(Config config, BlackjackPlayer holder) {
         super(config, holder);
         this.deck = new Deck();
-        this.dealer = new BlackjackDealer(holder.getUser(), holder.getBet());
+        this.dealer = new BlackjackPlayer(holder.getDiscordId(), holder.getBet());
     }
 
     /** Initializes the players' cards by dealing two cards to each player. */
@@ -48,7 +51,7 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
      */
     public boolean containsId(String discordId) {
         for (BlackjackPlayer player : players) {
-            if (player.getUser().getId().equals(discordId)) {
+            if (player.getDiscordId().equals(discordId)) {
                 return true;
             }
         }
@@ -58,20 +61,20 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
     /** Adds a card to the current player's hand. */
     public void hit() {
         Card card = deck.shuffleDeal();
-        getCurrentPlayer().addCard(card);
+        players.get(currentIndex).addCard(card);
     }
 
     /** Sets the current player's status to stop. */
     public void stand() {
-        getCurrentPlayer().setStop(true);
+        players.get(currentIndex).setStop(true);
     }
 
     /** surrender game */
     public void surrender() {
-        double bet = getCurrentPlayer().getBet() / 2;
-        getCurrentPlayer().setBet(bet);
-        while (!getCurrentPlayer().getHand().isBust())
-            getCurrentPlayer().addCard(new Card(Rank.KING, Suit.CLUBS));
+        double bet = players.get(currentIndex).getBet() / 2;
+        players.get(currentIndex).setBet(bet);
+        while (!players.get(currentIndex).getHand().isBust())
+            players.get(currentIndex).addCard(new Card(Rank.KING, Suit.CLUBS));
     }
 
     /**
@@ -80,8 +83,8 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
      * @return bet amount
      */
     public double doubledown() {
-        double bet = getCurrentPlayer().getBet() * 2;
-        getCurrentPlayer().setBet(bet);
+        double bet = players.get(currentIndex).getBet() * 2;
+        players.get(currentIndex).setBet(bet);
         return bet;
     }
 
@@ -107,13 +110,17 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
             if (player.getHand().getCurrentValue() == maxValue) {
                 gameResults.add(
                         new Result(
-                                player.getUser(),
+                                player.getDiscordId(),
                                 player.getBet()
                                         + player.getBet() / winnerTotalBets * sharedTotalBets));
             } else {
-                gameResults.add(new Result(player.getUser(), -player.getBet()));
+                gameResults.add(new Result(player.getDiscordId(), -player.getBet()));
             }
         }
         return gameResults;
     }
+
+    // public BlackjackPlayer getCurrentPlayer() {
+    // return players.get(currentIndex);
+    // }
 }

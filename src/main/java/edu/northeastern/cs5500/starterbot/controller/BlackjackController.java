@@ -2,7 +2,6 @@ package edu.northeastern.cs5500.starterbot.controller;
 
 import edu.northeastern.cs5500.starterbot.game.Config;
 import edu.northeastern.cs5500.starterbot.game.blackjack.BlackjackGame;
-import edu.northeastern.cs5500.starterbot.game.blackjack.BlackjackNormalPlayer;
 import edu.northeastern.cs5500.starterbot.game.blackjack.BlackjackPlayer;
 import edu.northeastern.cs5500.starterbot.game.blackjack.Card;
 import edu.northeastern.cs5500.starterbot.game.blackjack.Result;
@@ -41,7 +40,7 @@ public class BlackjackController {
         BlackjackGame blackjackGame =
                 new BlackjackGame(
                         new Config("BLACKJACK_GAME_NAME", min, max),
-                        new BlackjackNormalPlayer(holder));
+                        new BlackjackPlayer(holder.getId()));
         blackjackRepository.add(blackjackGame);
         return blackjackGame.getId();
     }
@@ -49,13 +48,13 @@ public class BlackjackController {
     public void startGame(ObjectId gameId, double bet, @NotNull ModalInteractionEvent event) {
         BlackjackGame blackjackGame = getGameFromObjectId(gameId);
         Objects.requireNonNull(blackjackGame);
-        BlackjackPlayer currentPlayer = blackjackGame.getCurrentPlayer();
-        currentPlayer.setBet(bet);
+        int index = blackjackGame.getCurrentIndex();
+        blackjackGame.getPlayers().get(index).setBet(bet);
         blackjackGame.initPlayerCard();
+        blackjackRepository.update(blackjackGame);
         sendMessage(
                 event,
-                BlackjackView.createBlackjackMessageBuilder(currentPlayer.getUser(), gameId)
-                        .build());
+                BlackjackView.createBlackjackMessageBuilder(event.getUser(), gameId).build());
     }
 
     public boolean canStart(ObjectId gameId) {
@@ -68,9 +67,11 @@ public class BlackjackController {
             ObjectId gameId, User user, double bet, @NotNull ModalInteractionEvent event) {
         BlackjackGame blackjackGame = getGameFromObjectId(gameId);
         Objects.requireNonNull(blackjackGame);
-        BlackjackNormalPlayer normalPlayerayer = new BlackjackNormalPlayer(user);
+        BlackjackPlayer normalPlayerayer = new BlackjackPlayer(user.getId());
         normalPlayerayer.setBet(bet);
         blackjackGame.joinPlayer(normalPlayerayer);
+        System.out.println(blackjackGame.getPlayers().size());
+        blackjackRepository.update(blackjackGame);
         sendMessage(event, user.getAsMention() + ": joined");
     }
 
@@ -86,7 +87,8 @@ public class BlackjackController {
             ObjectId gameId, String action, @Nonnull ButtonInteractionEvent event) {
         BlackjackGame blackjackGame = getGameFromObjectId(gameId);
         Objects.requireNonNull(blackjackGame);
-        BlackjackPlayer currentPlayer = blackjackGame.getCurrentPlayer();
+        int index = blackjackGame.getCurrentIndex();
+        BlackjackPlayer currentPlayer = blackjackGame.getPlayers().get(index);
         switch (action) {
             case "SHOW CARD" -> {
                 showCard(currentPlayer, event);
@@ -94,32 +96,45 @@ public class BlackjackController {
             }
             case "HIT" -> {
                 blackjackGame.hit();
+                blackjackRepository.update(blackjackGame);
             }
             case "SURRENDER" -> {
                 blackjackGame.surrender();
+                blackjackRepository.update(blackjackGame);
             }
             case "STAND" -> {
                 blackjackGame.stand();
+                blackjackRepository.update(blackjackGame);
             }
             case "DOUBLE DOWN" -> {
                 Double bet = blackjackGame.doubledown();
+                blackjackRepository.update(blackjackGame);
                 event.reply("You bet $" + bet.toString()).setEphemeral(true).queue(null, null);
             }
         }
         // move to the next player
         if (!blackjackGame.isEndOfRound()) {
             BlackjackPlayer blackjackPlayer = blackjackGame.nextPlayer();
-            sendMessage(
-                    event,
-                    BlackjackView.createBlackjackMessageBuilder(blackjackPlayer.getUser(), gameId)
-                            .build());
+            blackjackRepository.update(blackjackGame);
+            event.getJDA()
+                    .retrieveUserById(blackjackPlayer.getDiscordId())
+                    .queue(
+                            user -> {
+                                System.out.println(user.getName());
+                                sendMessage(
+                                        event,
+                                        BlackjackView.createBlackjackMessageBuilder(user, gameId)
+                                                .build());
+                            });
+
         } else {
             // check if need to end the game
             if (blackjackGame.getDealer().getHand().isBust()) {
                 List<Result> results = blackjackGame.shareAllBets();
                 updateBalance(results);
                 sendMessage(
-                        event, BlackjackView.createBlackjackResultMessageBuilder(results).build());
+                        event,
+                        BlackjackView.createBlackjackResultMessageBuilder(results, event).build());
                 blackjackRepository.delete(blackjackGame.getId());
                 return;
             }
@@ -133,16 +148,24 @@ public class BlackjackController {
                 List<Result> results = blackjackGame.shareAllBets();
                 updateBalance(results);
                 sendMessage(
-                        event, BlackjackView.createBlackjackResultMessageBuilder(results).build());
+                        event,
+                        BlackjackView.createBlackjackResultMessageBuilder(results, event).build());
                 blackjackRepository.delete(blackjackGame.getId());
                 return;
             }
             // continue
             BlackjackPlayer blackjackPlayer = blackjackGame.nextPlayer();
-            sendMessage(
-                    event,
-                    BlackjackView.createBlackjackMessageBuilder(blackjackPlayer.getUser(), gameId)
-                            .build());
+            blackjackRepository.update(blackjackGame);
+            event.getJDA()
+                    .retrieveUserById(blackjackPlayer.getDiscordId())
+                    .queue(
+                            user -> {
+                                System.out.println(user.getName());
+                                sendMessage(
+                                        event,
+                                        BlackjackView.createBlackjackMessageBuilder(user, gameId)
+                                                .build());
+                            });
         }
     }
 
@@ -200,7 +223,7 @@ public class BlackjackController {
 
     private void updateBalance(List<Result> results) {
         for (Result result : results) {
-            String discordId = result.getUser().getId();
+            String discordId = result.getDiscordId();
             Double amount = result.getBet();
             playerController.updateBalance(discordId, amount);
         }

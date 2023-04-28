@@ -32,6 +32,7 @@ public class SlotMachineController {
         this.slotMachineRepository = slotMachineRepository;
         this.playerController = playerController;
     }
+
     /**
      * Creates a new SlotMachine game and saves it in the repository.
      *
@@ -41,10 +42,11 @@ public class SlotMachineController {
     public ObjectId newGame(User player) {
         SlotMachineGame slotMachineGame =
                 new SlotMachineGame(
-                        new Config("BLACKJACK_GAME_NAME"), new SlotMachinePlayer(player));
+                        new Config("BLACKJACK_GAME_NAME"), new SlotMachinePlayer(player.getId()));
         slotMachineRepository.add(slotMachineGame);
         return slotMachineGame.getId();
     }
+
     /**
      * Starts the SlotMachine game for the given gameId and bet amount.
      *
@@ -55,15 +57,18 @@ public class SlotMachineController {
     public void startGame(ObjectId gameId, double bet, @Nonnull ModalInteractionEvent event) {
         SlotMachineGame slotMachineGame = getGameFromObjectId(gameId);
         Objects.requireNonNull(slotMachineGame);
-        SlotMachinePlayer currentPlayer = slotMachineGame.getCurrentPlayer();
-        currentPlayer.setBet(bet);
+        // SlotMachinePlayer currentPlayer = slotMachineGame.getCurrentPlayer();
+        // System.out.println(currentPlayer.getDiscordId());
+        slotMachineGame.getHolder().setBet(bet);
+        slotMachineRepository.update(slotMachineGame);
+        System.out.println(slotMachineGame.getCurrentPlayer().getBet());
         if (!slotMachineGame.canStart()) {
             sendMessage(event, "unable to play");
         } else {
             // "Game start"
             sendMessage(
                     event,
-                    SlotMachineView.createSlotMachineMessageBuilder(currentPlayer.getUser(), gameId)
+                    SlotMachineView.createSlotMachineMessageBuilder(event.getUser(), gameId)
                             .build());
         }
     }
@@ -120,7 +125,7 @@ public class SlotMachineController {
                 Pair<String[], Double> playResult = slotMachineGame.play(event);
                 String[] reels = playResult.getLeft();
                 double payout = playResult.getRight();
-                updateBalance(new Result(currentPlayer.getUser(), payout));
+                updateBalance(new Result(event.getUser().getId(), payout));
 
                 event.reply(
                                 String.format(
@@ -132,7 +137,7 @@ public class SlotMachineController {
                 event.getHook()
                         .sendMessage(
                                 SlotMachineView.createSlotMachineMessageBuilder(
-                                                currentPlayer.getUser(), gameId)
+                                                event.getUser(), gameId)
                                         .build())
                         .setEphemeral(true)
                         .queue();
@@ -142,9 +147,9 @@ public class SlotMachineController {
                 sendMessage(
                         event,
                         SlotMachineView.createSlotMachineResultMessageBuilder(
-                                        currentPlayer.getUser(),
+                                        event.getUser(),
                                         playerController
-                                                .getPlayer(currentPlayer.getUser().getId())
+                                                .getPlayer(currentPlayer.getDiscordId())
                                                 .getBalance())
                                 .build());
             }
@@ -154,13 +159,14 @@ public class SlotMachineController {
     public boolean containsGameId(ObjectId id) {
         return slotMachineRepository.contains(id);
     }
+
     /**
      * Updates the player's balance based on the game result.
      *
      * @param result the Result object containing the User and bet amount
      */
     public void updateBalance(Result result) {
-        String discordId = result.getUser().getId();
+        String discordId = result.getDiscordId();
         Double amount = result.getBet();
         playerController.updateBalance(discordId, amount);
     }

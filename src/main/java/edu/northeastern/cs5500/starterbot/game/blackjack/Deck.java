@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 public class Deck {
     private List<Card> cards;
-    private Random random;
+
     /** Constructs a new instance of the {@code Deck} class with a full deck of 52 cards. */
     public Deck() {
         this.cards = new ArrayList<>();
@@ -21,18 +21,18 @@ public class Deck {
                 this.cards.add(new Card(rank, suit));
             }
         }
-        this.random = new Random();
     }
 
     /** Shuffles the cards in this deck using the Fisher-Yates shuffle algorithm. */
     public void shuffle() {
         for (int i = this.cards.size() - 1; i > 0; i--) {
-            int j = this.random.nextInt(i + 1);
+            int j = new Random().nextInt(i + 1);
             Card temp = this.cards.get(i);
             this.cards.set(i, this.cards.get(j));
             this.cards.set(j, temp);
         }
     }
+
     /**
      * Deals the top card from this deck.
      *
@@ -41,6 +41,7 @@ public class Deck {
     public Card deal() {
         return this.cards.remove(0);
     }
+
     /**
      * Shuffles the cards in this deck and deals the top card.
      *

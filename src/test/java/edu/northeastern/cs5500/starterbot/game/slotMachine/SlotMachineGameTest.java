@@ -20,7 +20,7 @@ class SlotMachineGameTest {
     @BeforeEach
     void setUp() {
         User user = new UserImpl(1234567890L, null);
-        slotMachinePlayer = new SlotMachinePlayer(user);
+        slotMachinePlayer = new SlotMachinePlayer(user.getId());
         slotMachinePlayer.setBet(10);
         slotMachineGame =
                 new SlotMachineGame(new Config("SLOT_MACHINE_GAME_NAME"), slotMachinePlayer);

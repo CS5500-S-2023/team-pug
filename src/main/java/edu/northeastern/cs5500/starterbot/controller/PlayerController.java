@@ -11,6 +11,7 @@ import javax.inject.Inject;
  */
 public class PlayerController {
     GenericRepository<Player> playerRepository;
+
     /**
      * Constructor for the PlayerController.
      *
@@ -21,6 +22,7 @@ public class PlayerController {
     public PlayerController(GenericRepository<Player> playerRepository) {
         this.playerRepository = playerRepository;
     }
+
     /**
      * Retrieves a player with the given Discord user ID. If the player is not found, a new player
      * will be created and added to the repository.
@@ -39,6 +41,7 @@ public class PlayerController {
         playerRepository.add(newPlayer);
         return newPlayer;
     }
+
     /**
      * Sets the name of the player with the given Discord user ID.
      *
@@ -51,6 +54,7 @@ public class PlayerController {
         player.setLastLoginTime();
         playerRepository.update(player);
     }
+
     /**
      * Updates the balance of the player with the given Discord user ID by the specified amount.
      *
@@ -62,5 +66,6 @@ public class PlayerController {
         Double balance = player.getBalance();
         balance += amount;
         player.setBalance(balance);
+        playerRepository.update(player);
     }
 }

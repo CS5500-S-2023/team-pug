@@ -23,6 +23,7 @@ public class Player implements Model {
     String userName;
     Double balance;
     String lastLoginTime;
+
     /**
      * Constructs a new instance of the {@code Player} class with the specified Discord user ID. The
      * player's username is initially set to "Anonymous". The player's balance is initially set to
@@ -30,12 +31,15 @@ public class Player implements Model {
      *
      * @param discordUserId the Discord user ID of the player
      */
+    public Player() {}
+
     public Player(String discordUserId) {
         this.discordUserId = discordUserId;
         userName = "Anonymous";
         balance = 1000.00;
         setLastLoginTime();
     }
+
     /**
      * Sets the last login time of this player to the current date and time. The last login time is
      * stored as a string in the format "yyyy.MM.dd.HH.mm.ss".
