@@ -122,8 +122,8 @@ public class SlotMachineGameCommand implements SlashCommandHandler, ButtonHandle
         InputStream is = getClass().getResourceAsStream(filePath);
         Objects.requireNonNull(is);
         messageCreateBuilder
-            .addFiles(FileUpload.fromData(is, "cover_image.png"))
-            .addActionRow(start);
+                .addFiles(FileUpload.fromData(is, "cover_image.png"))
+                .addActionRow(start);
         return messageCreateBuilder;
     }
 }

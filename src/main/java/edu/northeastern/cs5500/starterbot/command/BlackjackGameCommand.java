@@ -184,8 +184,8 @@ public class BlackjackGameCommand implements SlashCommandHandler, ButtonHandler,
         InputStream is = getClass().getResourceAsStream(filePath);
         Objects.requireNonNull(is);
         messageCreateBuilder
-            .addFiles(FileUpload.fromData(is, "cover_image.png"))
-            .addActionRow(join, start);
+                .addFiles(FileUpload.fromData(is, "cover_image.png"))
+                .addActionRow(join, start);
         return messageCreateBuilder;
     }
 }
