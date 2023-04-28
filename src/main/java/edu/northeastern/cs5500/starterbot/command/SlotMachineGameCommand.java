@@ -6,6 +6,8 @@ import edu.northeastern.cs5500.starterbot.model.Player;
 import edu.northeastern.cs5500.starterbot.util.Constant;
 import java.awt.Color;
 import java.io.File;
+import java.io.InputStream;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -20,6 +22,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.interactions.modals.Modal;
+import net.dv8tion.jda.api.utils.FileUpload;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
@@ -108,14 +111,19 @@ public class SlotMachineGameCommand implements SlashCommandHandler, ButtonHandle
                 new EmbedBuilder()
                         .setTitle(gameName)
                         .setDescription(gameStarter.getAsMention() + "start a new game")
+                        .setImage("attachment://cover_image.png")
                         .setColor(Color.BLUE);
         MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder();
         messageCreateBuilder.addEmbeds(embedBuilder.build());
         gameId = slotMachineController.newGame(gameStarter);
         Button start =
                 Button.danger(this.getName() + ":start" + ":" + gameId + ":" + gameName, "START");
-
-        messageCreateBuilder.addActionRow(start);
+        String filePath = "/slotMachine.png";
+        InputStream is = getClass().getResourceAsStream(filePath);
+        Objects.requireNonNull(is);
+        messageCreateBuilder
+                .addFiles(FileUpload.fromData(is, "cover_image.png"))
+                .addActionRow(start);
         return messageCreateBuilder;
     }
 }

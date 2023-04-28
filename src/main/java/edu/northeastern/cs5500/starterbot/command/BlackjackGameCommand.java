@@ -152,9 +152,6 @@ public class BlackjackGameCommand implements SlashCommandHandler, ButtonHandler,
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-        InputStream is = getClass().getResourceAsStream("/blackjack.jpeg");
-        Objects.requireNonNull(is);
-        event.getMessageChannel().sendFiles(FileUpload.fromData(is, "blackjack.jpeg")).queue();
         event.reply(createStartGameMessageBuilder(event).build()).queue();
     }
 
@@ -166,9 +163,9 @@ public class BlackjackGameCommand implements SlashCommandHandler, ButtonHandler,
 
         EmbedBuilder embedBuilder =
                 new EmbedBuilder()
-                        .setImage("attachment://blackjack.jpeg")
                         .setTitle(gameName)
                         .setDescription(gameStarter.getAsMention() + "start a new game")
+                        .setImage("attachment://cover_image.png")
                         .setColor(Color.BLUE);
 
         MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder();
@@ -183,7 +180,12 @@ public class BlackjackGameCommand implements SlashCommandHandler, ButtonHandler,
         Button start =
                 Button.danger(this.getName() + ":start" + ":" + gameId + ":" + gameName, "START");
 
-        messageCreateBuilder.addActionRow(join, start);
+        String filePath = "/blackjack.png";
+        InputStream is = getClass().getResourceAsStream(filePath);
+        Objects.requireNonNull(is);
+        messageCreateBuilder
+                .addFiles(FileUpload.fromData(is, "cover_image.png"))
+                .addActionRow(join, start);
         return messageCreateBuilder;
     }
 }
