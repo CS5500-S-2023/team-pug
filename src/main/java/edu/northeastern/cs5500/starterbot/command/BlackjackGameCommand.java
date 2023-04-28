@@ -32,14 +32,11 @@ import org.jetbrains.annotations.NotNull;
 @Singleton
 @Slf4j
 public class BlackjackGameCommand implements SlashCommandHandler, ButtonHandler, ModalHandler {
-    @Inject
-    BlackjackController blackjackController;
-    @Inject
-    PlayerController playerController;
+    @Inject BlackjackController blackjackController;
+    @Inject PlayerController playerController;
 
     @Inject
-    public BlackjackGameCommand() {
-    }
+    public BlackjackGameCommand() {}
 
     @NotNull
     @Override
@@ -82,8 +79,14 @@ public class BlackjackGameCommand implements SlashCommandHandler, ButtonHandler,
                         .queue();
                 return;
             }
-            if (!userId.equals(blackjackController.getBlackjackRepository().get(gameId).getHolder().getDiscordId())) {
-                event.reply("You are not the holder of the game, please wait the holder to start...")
+            if (!userId.equals(
+                    blackjackController
+                            .getBlackjackRepository()
+                            .get(gameId)
+                            .getHolder()
+                            .getDiscordId())) {
+                event.reply(
+                                "You are not the holder of the game, please wait the holder to start...")
                         .setEphemeral(true)
                         .queue();
                 return;
@@ -103,8 +106,7 @@ public class BlackjackGameCommand implements SlashCommandHandler, ButtonHandler,
     }
 
     private boolean checkBets(double bet, Player player) {
-        if (player.getBalance() < bet || bet <= 0)
-            return false;
+        if (player.getBalance() < bet || bet <= 0) return false;
         return true;
     }
 
@@ -124,24 +126,26 @@ public class BlackjackGameCommand implements SlashCommandHandler, ButtonHandler,
                 return;
             }
         }
-        TextInput bet = TextInput.create("sub", "Your Bet", TextInputStyle.SHORT)
-                .setMinLength(1)
-                .setRequired(true)
-                .build();
+        TextInput bet =
+                TextInput.create("sub", "Your Bet", TextInputStyle.SHORT)
+                        .setMinLength(1)
+                        .setRequired(true)
+                        .build();
 
-        Modal modal = Modal.create(
-                this.getName()
-                        + ":"
-                        + user.getId()
-                        + ":"
-                        + id
-                        + ":"
-                        + gameName
-                        + ":"
-                        + label,
-                "Bet")
-                .addActionRows(ActionRow.of(bet))
-                .build();
+        Modal modal =
+                Modal.create(
+                                this.getName()
+                                        + ":"
+                                        + user.getId()
+                                        + ":"
+                                        + id
+                                        + ":"
+                                        + gameName
+                                        + ":"
+                                        + label,
+                                "Bet")
+                        .addActionRows(ActionRow.of(bet))
+                        .build();
         event.replyModal(modal).queue();
     }
 
@@ -159,11 +163,12 @@ public class BlackjackGameCommand implements SlashCommandHandler, ButtonHandler,
         String gameName = Constant.BLACKJACK_GAME_NAME;
         ObjectId gameId = null;
 
-        EmbedBuilder embedBuilder = new EmbedBuilder()
-                .setImage("attachment://blackjack.jpeg")
-                .setTitle(gameName)
-                .setDescription(gameStarter.getAsMention() + "start a new game")
-                .setColor(Color.BLUE);
+        EmbedBuilder embedBuilder =
+                new EmbedBuilder()
+                        .setImage("attachment://blackjack.jpeg")
+                        .setTitle(gameName)
+                        .setDescription(gameStarter.getAsMention() + "start a new game")
+                        .setColor(Color.BLUE);
 
         MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder();
         messageCreateBuilder.addEmbeds(embedBuilder.build());
@@ -172,8 +177,10 @@ public class BlackjackGameCommand implements SlashCommandHandler, ButtonHandler,
         int maxNumberOfPlayers = event.getOption("max-players").getAsInt();
         gameId = blackjackController.newGame(minNumberOfPlayers, maxNumberOfPlayers, gameStarter);
 
-        Button join = Button.primary(this.getName() + ":join" + ":" + gameId + ":" + gameName, "JOIN");
-        Button start = Button.danger(this.getName() + ":start" + ":" + gameId + ":" + gameName, "START");
+        Button join =
+                Button.primary(this.getName() + ":join" + ":" + gameId + ":" + gameName, "JOIN");
+        Button start =
+                Button.danger(this.getName() + ":start" + ":" + gameId + ":" + gameName, "START");
 
         messageCreateBuilder.addActionRow(join, start);
         return messageCreateBuilder;
