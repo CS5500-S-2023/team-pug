@@ -79,22 +79,23 @@ public class BlackjackGameCommand implements SlashCommandHandler, ButtonHandler,
                         .queue();
                 return;
             }
-            if (!userId.equals(
-                    blackjackController
-                            .getBlackjackRepository()
-                            .get(gameId)
-                            .getHolder()
-                            .getDiscordId())) {
-                event.reply(
-                                "You are not the holder of the game, please wait the holder to start...")
-                        .setEphemeral(true)
-                        .queue();
-                return;
-            }
+
             if (isJoin) {
                 Objects.requireNonNull(event.getUser());
                 blackjackController.joinGame(gameId, event.getUser(), bet, event);
             } else {
+                if (!userId.equals(
+                        blackjackController
+                                .getBlackjackRepository()
+                                .get(gameId)
+                                .getHolder()
+                                .getDiscordId())) {
+                    event.reply(
+                                    "You are not the holder of the game, please wait the holder to start...")
+                            .setEphemeral(true)
+                            .queue();
+                    return;
+                }
                 blackjackController.startGame(gameId, bet, event);
             }
             if (event.isAcknowledged()) {
