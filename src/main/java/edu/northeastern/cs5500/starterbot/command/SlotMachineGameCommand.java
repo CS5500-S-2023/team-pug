@@ -93,7 +93,7 @@ public class SlotMachineGameCommand implements SlashCommandHandler, ButtonHandle
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-        event.reply(createStartGameMessageBuilder(event).build()).queue();
+        event.reply(createStartGameMessageBuilder(event).build()).setEphemeral(true).queue();
     }
 
     private boolean checkBets(double bet, Player player) {
