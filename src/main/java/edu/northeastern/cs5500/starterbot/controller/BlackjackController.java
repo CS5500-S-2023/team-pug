@@ -24,10 +24,21 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * This class represents the main controller for the blackjack game within a Discord bot
+ * application. It handles game creation, player actions, and game flow.
+ */
 public class BlackjackController {
     private GenericRepository<BlackjackGame> blackjackRepository;
     private PlayerController playerController;
-
+    /**
+     * Creates a new instance of the BlackjackController with the specified game repository and
+     * player controller.
+     *
+     * @param blackjackRepository a {@link GenericRepository<BlackjackGame>} for storing blackjack
+     *     games
+     * @param playerController a {@link PlayerController} for managing players and their balances
+     */
     @Inject
     public BlackjackController(
             GenericRepository<BlackjackGame> blackjackRepository,
@@ -35,7 +46,15 @@ public class BlackjackController {
         this.blackjackRepository = blackjackRepository;
         this.playerController = playerController;
     }
-
+    /**
+     * Creates a new blackjack game with the specified minimum and maximum number of players and
+     * assigns the holder of the game.
+     *
+     * @param min the minimum number of players required to start the game
+     * @param max the maximum number of players allowed to join the game
+     * @param holder a {@link User} who holds the game
+     * @return the {@link ObjectId} of the created game
+     */
     public ObjectId newGame(int min, int max, User holder) {
         BlackjackGame blackjackGame =
                 new BlackjackGame(
@@ -44,7 +63,13 @@ public class BlackjackController {
         blackjackRepository.add(blackjackGame);
         return blackjackGame.getId();
     }
-
+    /**
+     * Starts a blackjack game with the specified game ID, bet amount, and modal interaction event.
+     *
+     * @param gameId the {@link ObjectId} of the game to start
+     * @param bet the amount the player has bet
+     * @param event the {@link ModalInteractionEvent} representing the start game action
+     */
     public void startGame(ObjectId gameId, double bet, @NotNull ModalInteractionEvent event) {
         BlackjackGame blackjackGame = getGameFromObjectId(gameId);
         Objects.requireNonNull(blackjackGame);
@@ -56,13 +81,15 @@ public class BlackjackController {
                 event,
                 BlackjackView.createBlackjackMessageBuilder(event.getUser(), gameId).build());
     }
-
-    public boolean canStart(ObjectId gameId) {
-        BlackjackGame blackjackGame = getGameFromObjectId(gameId);
-        Objects.requireNonNull(blackjackGame);
-        return blackjackGame.canStart();
-    }
-
+    /**
+     * Allows a user to join the game with the specified game ID, bet amount, and modal interaction
+     * event.
+     *
+     * @param gameId the {@link ObjectId} of the game to join
+     * @param user the {@link User} who wants to join the game
+     * @param bet the amount the user wants to bet
+     * @param event the {@link ModalInteractionEvent} representing the join game action
+     */
     public void joinGame(
             ObjectId gameId, User user, double bet, @NotNull ModalInteractionEvent event) {
         BlackjackGame blackjackGame = getGameFromObjectId(gameId);
@@ -75,6 +102,12 @@ public class BlackjackController {
         sendMessage(event, user.getAsMention() + ": joined");
     }
 
+    /**
+     * get game via ID
+     *
+     * @param id
+     * @return
+     */
     private BlackjackGame getGameFromObjectId(ObjectId id) {
         Collection<BlackjackGame> collection = blackjackRepository.getAll();
         for (BlackjackGame blackjackGame : collection) {
@@ -82,7 +115,14 @@ public class BlackjackController {
         }
         return null;
     }
-
+    /**
+     * Handles the player's action during the game, including "SHOW CARD", "HIT", "SURRENDER",
+     * "STAND", and "DOUBLE DOWN".
+     *
+     * @param gameId the {@link ObjectId} of the game
+     * @param action the action the player wants to perform
+     * @param event the {@link ButtonInteractionEvent} representing the player's action
+     */
     public void handlePlayerAction(
             ObjectId gameId, String action, @Nonnull ButtonInteractionEvent event) {
         BlackjackGame blackjackGame = getGameFromObjectId(gameId);
@@ -175,14 +215,24 @@ public class BlackjackController {
                             });
         }
     }
-
+    /**
+     * Shows the player's cards in a private message.
+     *
+     * @param currentPlayer the {@link BlackjackPlayer} whose cards need to be shown
+     * @param event the {@link ButtonInteractionEvent} representing the show card action
+     */
     private void showCard(BlackjackPlayer currentPlayer, @Nonnull ButtonInteractionEvent event) {
         for (Card card : currentPlayer.getHand().getCards()) {
             String cardImagePath = BlackjackUtils.mapCardImageLocation(card);
             sendPrivateFile(event, cardImagePath);
         }
     }
-
+    /**
+     * Sends a message to the channel where the interaction event occurred.
+     *
+     * @param event the {@link ModalInteractionEvent} representing the interaction
+     * @param messageContent the content of the message to send
+     */
     private void sendMessage(@Nonnull ModalInteractionEvent event, @Nonnull String messageContent) {
         if (event.isAcknowledged()) {
             event.getHook().sendMessage(messageContent).queue();
@@ -190,7 +240,12 @@ public class BlackjackController {
             event.reply(messageContent).queue();
         }
     }
-
+    /**
+     * Sends a private file to the user who triggered the {@link ButtonInteractionEvent}.
+     *
+     * @param event the {@link ButtonInteractionEvent} representing the interaction
+     * @param filePath the path to the file to send
+     */
     private void sendPrivateFile(@Nonnull ButtonInteractionEvent event, String filePath) {
         EmbedBuilder embedBuilder = new EmbedBuilder().setImage("attachment://card_image.png");
         InputStream is = getClass().getResourceAsStream(filePath);
@@ -205,7 +260,12 @@ public class BlackjackController {
             event.reply(messageCreateBuilder.build()).setEphemeral(true).queue();
         }
     }
-
+    /**
+     * Sends a message to the channel where the interaction event occurred.
+     *
+     * @param event the {@link ModalInteractionEvent} representing the interaction
+     * @param messageCreateData the {@link MessageCreateData} to send
+     */
     private void sendMessage(
             @Nonnull ModalInteractionEvent event, @Nonnull MessageCreateData messageCreateData) {
 
@@ -216,7 +276,12 @@ public class BlackjackController {
             event.reply(messageCreateData).queue();
         }
     }
-
+    /**
+     * Sends a message to the channel where the interaction event occurred.
+     *
+     * @param event the {@link ButtonInteractionEvent} representing the interaction
+     * @param messageCreateData the {@link MessageCreateData} to send
+     */
     private void sendMessage(
             @Nonnull ButtonInteractionEvent event, @Nonnull MessageCreateData messageCreateData) {
 
@@ -227,7 +292,12 @@ public class BlackjackController {
             event.reply(messageCreateData).queue();
         }
     }
-
+    /**
+     * Updates the balance of the players based on the results of the game.
+     *
+     * @param results the {@link List} of {@link Result} objects representing the results of the
+     *     game
+     */
     private void updateBalance(List<Result> results) {
         for (Result result : results) {
             String discordId = result.getDiscordId();
@@ -235,11 +305,22 @@ public class BlackjackController {
             playerController.updateBalance(discordId, amount);
         }
     }
-
+    /**
+     * Checks if the game with the specified game ID exists in the repository.
+     *
+     * @param id the {@link ObjectId} representing the game ID
+     * @return true if the game ID exists in the repository, false otherwise
+     */
     public boolean containsGameId(ObjectId id) {
         return blackjackRepository.contains(id);
     }
-
+    /**
+     * Checks if the user with the specified ID is in the game with the specified game ID.
+     *
+     * @param gameID the {@link ObjectId} representing the game ID
+     * @param user the {@link User} object representing the user
+     * @return true if the user ID is in the game, false otherwise
+     */
     public boolean containsUserId(ObjectId gameID, User user) {
         BlackjackGame blackjackGame = getGameFromObjectId(gameID);
         Objects.requireNonNull(blackjackGame);
@@ -248,11 +329,24 @@ public class BlackjackController {
         }
         return false;
     }
-
+    /**
+     * Gets the {@link GenericRepository} for {@link BlackjackGame}.
+     *
+     * @return the {@link GenericRepository} for {@link BlackjackGame}
+     */
     public GenericRepository<BlackjackGame> getBlackjackRepository() {
         return blackjackRepository;
     }
-
+    /**
+     * Checks the game configuration for the specified game ID and determines if the game can be
+     * started or joined based on the input parameter.
+     *
+     * @param gameId the {@link ObjectId} representing the game ID
+     * @param isJoin a boolean indicating whether the game should be checked for joining (true) or
+     *     starting (false)
+     * @return true if the game can be joined or started based on the input parameter, false
+     *     otherwise
+     */
     public boolean checkConfig(ObjectId gameId, boolean isJoin) {
         BlackjackGame blackjackGame = getGameFromObjectId(gameId);
         Objects.requireNonNull(blackjackGame);
