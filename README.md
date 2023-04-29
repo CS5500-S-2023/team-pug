@@ -26,3 +26,9 @@ $MONGODB_URI is used when testing on mongodb
 [Discord Docs](https://discord.com/developers/docs/intro)
 
 [Youtube presentation link](https://youtu.be/gzjEnNnoCMM)
+
+## Test Coverage
+
+Test Coverage: 52%
+Branch Coverage:44%
+<img width="1297" alt="image" src="https://user-images.githubusercontent.com/113061309/235287061-7d32b11e-ac20-46cf-9976-5f12e92cc105.png">
