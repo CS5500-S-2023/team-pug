@@ -35,6 +35,7 @@ Branch Coverage:44%
 
 ## Operational documentation
 Open discord, and go the target server, interact with the bot using below commands
+
 /info
 
 /blackjack
