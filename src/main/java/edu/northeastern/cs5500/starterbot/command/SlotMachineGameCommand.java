@@ -5,7 +5,6 @@ import edu.northeastern.cs5500.starterbot.controller.SlotMachineController;
 import edu.northeastern.cs5500.starterbot.model.Player;
 import edu.northeastern.cs5500.starterbot.util.Constant;
 import java.awt.Color;
-import java.io.File;
 import java.io.InputStream;
 import java.util.Objects;
 import javax.annotation.Nonnull;
@@ -22,6 +21,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.interactions.modals.Modal;
+import net.dv8tion.jda.api.interactions.modals.ModalMapping;
 import net.dv8tion.jda.api.utils.FileUpload;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.bson.types.ObjectId;
@@ -38,8 +38,10 @@ public class SlotMachineGameCommand implements SlashCommandHandler, ButtonHandle
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         User user = event.getUser();
-        ObjectId id = new ObjectId(event.getButton().getId().split(":")[2]);
-        String gameName = event.getButton().getId().split(":")[3];
+        String eventId = event.getButton().getId();
+        Objects.requireNonNull(eventId);
+        ObjectId id = new ObjectId(eventId.split(":")[2]);
+        String gameName = eventId.split(":")[3];
         String label = event.getButton().getLabel();
         TextInput bet =
                 TextInput.create("sub", "Your Bet", TextInputStyle.SHORT)
@@ -69,7 +71,9 @@ public class SlotMachineGameCommand implements SlashCommandHandler, ButtonHandle
         String userId = event.getModalId().split(":")[1];
         ObjectId gameId = new ObjectId(event.getModalId().split(":")[2]);
         if (userId.equals(event.getUser().getId())) {
-            Double bet = Double.valueOf(event.getValue("sub").getAsString());
+            ModalMapping mm = event.getValue("sub");
+            Objects.requireNonNull(mm);
+            Double bet = Double.valueOf(mm.getAsString());
             Player player = playerController.getPlayer(event.getUser().getId());
             if (!checkBets(bet, player)) {
                 event.reply("bet is illegal").setEphemeral(true).queue();
@@ -88,7 +92,9 @@ public class SlotMachineGameCommand implements SlashCommandHandler, ButtonHandle
     @NotNull
     @Override
     public CommandData getCommandData() {
-        return Commands.slash(getName(), "start a slot machine game!");
+        String name = getName();
+        Objects.requireNonNull(name);
+        return Commands.slash(name, "start a slot machine game!");
     }
 
     @Override
@@ -106,7 +112,6 @@ public class SlotMachineGameCommand implements SlashCommandHandler, ButtonHandle
         String gameName = Constant.SLOTMACHINE_GAME_NAME;
         User gameStarter = event.getUser();
         ObjectId gameId = null;
-        File file = null;
         EmbedBuilder embedBuilder =
                 new EmbedBuilder()
                         .setTitle(gameName)

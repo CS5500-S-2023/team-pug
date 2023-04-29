@@ -16,6 +16,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
@@ -24,6 +25,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.interactions.modals.Modal;
+import net.dv8tion.jda.api.interactions.modals.ModalMapping;
 import net.dv8tion.jda.api.utils.FileUpload;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.bson.types.ObjectId;
@@ -41,13 +43,16 @@ public class BlackjackGameCommand implements SlashCommandHandler, ButtonHandler,
     @NotNull
     @Override
     public String getName() {
+
         return Constant.BLACKJACK_GAME_NAME.toLowerCase();
     }
 
     @NotNull
     @Override
     public CommandData getCommandData() {
-        return Commands.slash(getName(), "start a blackjack game!")
+        String name = getName();
+        Objects.requireNonNull(name);
+        return Commands.slash(name, "start a blackjack game!")
                 .addOption(
                         OptionType.INTEGER,
                         "min-players",
@@ -66,7 +71,10 @@ public class BlackjackGameCommand implements SlashCommandHandler, ButtonHandler,
         ObjectId gameId = new ObjectId(event.getModalId().split(":")[2]);
         String label = event.getModalId().split(":")[4];
         if (userId.equals(event.getUser().getId())) {
-            double bet = Double.parseDouble(event.getValue("sub").getAsString());
+            Objects.requireNonNull(event.getValue("sub"));
+            ModalMapping mm = event.getValue("sub");
+            Objects.requireNonNull(mm);
+            double bet = Double.parseDouble(mm.getAsString());
             Player player = playerController.getPlayer(event.getUser().getId());
             boolean isJoin = label.equals("JOIN");
             if (!checkBets(bet, player)) {
@@ -118,14 +126,14 @@ public class BlackjackGameCommand implements SlashCommandHandler, ButtonHandler,
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         User user = event.getUser();
-        ObjectId id = new ObjectId(event.getButton().getId().split(":")[2]);
-        String gameName = event.getButton().getId().split(":")[3];
+        String eventId = event.getButton().getId();
+        Objects.requireNonNull(eventId);
+        ObjectId id = new ObjectId(eventId.split(":")[2]);
+        String gameName = eventId.split(":")[3];
         String label = event.getButton().getLabel();
-        if (label.equals("JOIN")) {
-            if (blackjackController.containsUserId(id, user)) {
-                event.reply("You have already joined").setEphemeral(true).queue();
-                return;
-            }
+        if (label.equals("JOIN") && blackjackController.containsUserId(id, user)) {
+            event.reply("You have already joined").setEphemeral(true).queue();
+            return;
         }
         TextInput bet =
                 TextInput.create("sub", "Your Bet", TextInputStyle.SHORT)
@@ -151,7 +159,8 @@ public class BlackjackGameCommand implements SlashCommandHandler, ButtonHandler,
     }
 
     @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+    public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
+        log.info("blackjack");
         event.reply(createStartGameMessageBuilder(event).build()).queue();
     }
 
@@ -170,9 +179,12 @@ public class BlackjackGameCommand implements SlashCommandHandler, ButtonHandler,
 
         MessageCreateBuilder messageCreateBuilder = new MessageCreateBuilder();
         messageCreateBuilder.addEmbeds(embedBuilder.build());
-
-        int minNumberOfPlayers = event.getOption("min-players").getAsInt();
-        int maxNumberOfPlayers = event.getOption("max-players").getAsInt();
+        OptionMapping op1 = event.getOption("min-players");
+        OptionMapping op2 = event.getOption("max-players");
+        Objects.requireNonNull(op1);
+        Objects.requireNonNull(op2);
+        int minNumberOfPlayers = op1.getAsInt();
+        int maxNumberOfPlayers = op2.getAsInt();
         gameId = blackjackController.newGame(minNumberOfPlayers, maxNumberOfPlayers, gameStarter);
 
         Button join =

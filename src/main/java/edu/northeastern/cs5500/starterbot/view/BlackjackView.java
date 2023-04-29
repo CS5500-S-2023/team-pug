@@ -5,6 +5,7 @@ import static edu.northeastern.cs5500.starterbot.util.Constant.BLACKJACK_GAME_NA
 import edu.northeastern.cs5500.starterbot.game.blackjack.Result;
 import java.awt.Color;
 import java.util.List;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
@@ -19,6 +20,8 @@ import org.bson.types.ObjectId;
  * buttons.
  */
 public class BlackjackView {
+    private BlackjackView() {}
+
     /**
      * Creates a Discord message builder for the initial Blackjack game message.
      *
@@ -64,8 +67,13 @@ public class BlackjackView {
         EmbedBuilder embedBuilder =
                 new EmbedBuilder().setTitle(BLACKJACK_GAME_NAME + " Result  " + ":sparkles:");
         for (Result result : results) {
-            User user = event.getJDA().retrieveUserById(result.getDiscordId()).complete();
-            embedBuilder.addField(user.getName(), result.getBet().toString(), true);
+            String id = result.getDiscordId();
+            Objects.requireNonNull(id);
+            Double bet = result.getBet();
+            String betString = bet.toString();
+            Objects.requireNonNull(betString);
+            User user = event.getJDA().retrieveUserById(id).complete();
+            embedBuilder.addField(user.getName(), betString, true);
         }
 
         return new MessageCreateBuilder().addEmbeds(embedBuilder.build());

@@ -3,6 +3,7 @@ package edu.northeastern.cs5500.starterbot.command;
 import static edu.northeastern.cs5500.starterbot.util.Constant.BLACKJACK_GAME_NAME;
 
 import edu.northeastern.cs5500.starterbot.controller.BlackjackController;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -14,6 +15,7 @@ import org.bson.types.ObjectId;
  */
 public class BlackjackCommand implements ButtonHandler {
     @Inject BlackjackController blackjackController;
+
     /** Constructs a new instance of BlackjackCommand. */
     @Inject
     public BlackjackCommand() {}
@@ -28,6 +30,7 @@ public class BlackjackCommand implements ButtonHandler {
     public String getName() {
         return BLACKJACK_GAME_NAME;
     }
+
     /**
      * Handles button interactions for the Blackjack game.
      *
@@ -37,9 +40,10 @@ public class BlackjackCommand implements ButtonHandler {
     public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
         // accept actions for blackjack and pass to controller
         String action = event.getButton().getLabel();
-        String targetUserId = event.getButton().getId().split(":")[3];
-        ObjectId id = new ObjectId(event.getButton().getId().split(":")[2]);
-        // when the game finished it will reply some message
+        String eventId = event.getButton().getId();
+        Objects.requireNonNull(eventId);
+        String targetUserId = eventId.split(":")[3];
+        ObjectId id = new ObjectId(eventId.split(":")[2]);
         if (!blackjackController.containsGameId(id)) {
             event.reply("The game has already finished...").setEphemeral(true).queue();
             return;

@@ -3,6 +3,7 @@ package edu.northeastern.cs5500.starterbot.command;
 import static edu.northeastern.cs5500.starterbot.util.Constant.SLOTMACHINE_GAME_NAME;
 
 import edu.northeastern.cs5500.starterbot.controller.SlotMachineController;
+import java.util.Objects;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,7 @@ public class SlotMachineCommand implements ButtonHandler {
     public SlotMachineCommand(SlotMachineController slotMachineController) {
         this.slotMachineController = slotMachineController;
     }
+
     /**
      * Returns the name of the Slot Machine game.
      *
@@ -40,6 +42,7 @@ public class SlotMachineCommand implements ButtonHandler {
     public String getName() {
         return SLOTMACHINE_GAME_NAME;
     }
+
     /**
      * Handles button interactions related to the Slot Machine game.
      *
@@ -47,10 +50,13 @@ public class SlotMachineCommand implements ButtonHandler {
      */
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
+        log.info(SLOTMACHINE_GAME_NAME);
         // accept actions for blackjack and pass to controller
         String action = event.getButton().getLabel();
-        String targetUserId = event.getButton().getId().split(":")[3];
-        ObjectId id = new ObjectId(event.getButton().getId().split(":")[2]);
+        String eventId = event.getButton().getId();
+        Objects.requireNonNull(eventId);
+        String targetUserId = eventId.split(":")[3];
+        ObjectId id = new ObjectId(eventId.split(":")[2]);
         // when the game finished it will reply some message
         if (!slotMachineController.containsGameId(id)) {
             event.reply("The game has already finished...").setEphemeral(true).queue();

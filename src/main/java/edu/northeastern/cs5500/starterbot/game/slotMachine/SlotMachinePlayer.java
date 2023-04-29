@@ -6,20 +6,16 @@ import lombok.Data;
 /** SlotMachinePlayer represents a player participating in a slot machine game. */
 @Data
 public class SlotMachinePlayer implements IPlayer {
-    // private User user;
     private String discordId;
     private double bet;
 
     public SlotMachinePlayer() {}
 
-    // /**
-    // * Constructs a new SlotMachinePlayer with the specified user.
-    // *
-    // * @param user the user participating in the game
-    // */
-    // public SlotMachinePlayer(User user) {
-    // this.user = user;
-    // }
+    /**
+     * Constructs a new SlotMachinePlayer with the specified user.
+     *
+     * @param discordId the user participating in the game
+     */
     public SlotMachinePlayer(String discordId) {
         this.discordId = discordId;
     }

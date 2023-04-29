@@ -7,6 +7,8 @@ import edu.northeastern.cs5500.starterbot.game.blackjack.Card;
  * Blackjack game.
  */
 public class BlackjackUtils {
+    private BlackjackUtils() {}
+
     /**
      * Maps a Card object to its corresponding image file path.
      *

@@ -57,11 +57,8 @@ public class SlotMachineController {
     public void startGame(ObjectId gameId, double bet, @Nonnull ModalInteractionEvent event) {
         SlotMachineGame slotMachineGame = getGameFromObjectId(gameId);
         Objects.requireNonNull(slotMachineGame);
-        // SlotMachinePlayer currentPlayer = slotMachineGame.getCurrentPlayer();
-        // System.out.println(currentPlayer.getDiscordId());
         slotMachineGame.getHolder().setBet(bet);
         slotMachineRepository.update(slotMachineGame);
-        System.out.println(slotMachineGame.getCurrentPlayer().getBet());
         if (!slotMachineGame.canStart()) {
             sendMessage(event, "unable to play");
         } else {
@@ -88,12 +85,6 @@ public class SlotMachineController {
     }
 
     private void sendMessage(@Nonnull ModalInteractionEvent event, @Nonnull String messageContent) {
-
-        event.reply(messageContent).setEphemeral(true).queue();
-    }
-
-    private void sendMessage(
-            @Nonnull ButtonInteractionEvent event, @Nonnull String messageContent) {
 
         event.reply(messageContent).setEphemeral(true).queue();
     }
@@ -126,13 +117,10 @@ public class SlotMachineController {
                 String[] reels = playResult.getLeft();
                 double payout = playResult.getRight();
                 updateBalance(new Result(event.getUser().getId(), payout));
-
-                event.reply(
-                                String.format(
-                                        "%s %s %s\nPayout: %f",
-                                        reels[0], reels[1], reels[2], payout))
-                        .setEphemeral(true)
-                        .queue();
+                String s =
+                        String.format("%s %s %s\nPayout: %f", reels[0], reels[1], reels[2], payout);
+                Objects.requireNonNull(s);
+                event.reply(s).setEphemeral(true).queue();
 
                 event.getHook()
                         .sendMessage(
@@ -143,7 +131,9 @@ public class SlotMachineController {
                         .queue();
             }
             case "END" -> {
-                slotMachineRepository.delete(slotMachineGame.getId());
+                ObjectId id = slotMachineGame.getId();
+                Objects.requireNonNull(id);
+                slotMachineRepository.delete(id);
                 sendMessage(
                         event,
                         SlotMachineView.createSlotMachineResultMessageBuilder(
@@ -153,6 +143,7 @@ public class SlotMachineController {
                                                 .getBalance())
                                 .build());
             }
+            default -> {}
         }
     }
 
