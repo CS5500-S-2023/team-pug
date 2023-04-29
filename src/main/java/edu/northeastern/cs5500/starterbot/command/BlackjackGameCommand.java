@@ -31,22 +31,35 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents a command handler for a Blackjack game, handling SlashCommandInteractionEvents,
+ * ButtonInteractionEvents, and ModalInteractionEvents related to the game.
+ */
 @Singleton
 @Slf4j
 public class BlackjackGameCommand implements SlashCommandHandler, ButtonHandler, ModalHandler {
     @Inject BlackjackController blackjackController;
     @Inject PlayerController playerController;
 
+    /** Constructor for the BlackjackGameCommand. */
     @Inject
     public BlackjackGameCommand() {}
-
+    /**
+     * Returns the name of this command.
+     *
+     * @return The command name as a String.
+     */
     @NotNull
     @Override
     public String getName() {
 
         return Constant.BLACKJACK_GAME_NAME.toLowerCase();
     }
-
+    /**
+     * Gets the CommandData for the BlackjackGameCommand.
+     *
+     * @return The CommandData object.
+     */
     @NotNull
     @Override
     public CommandData getCommandData() {
@@ -64,7 +77,11 @@ public class BlackjackGameCommand implements SlashCommandHandler, ButtonHandler,
                         "Maximum number of players (for Blackjack)",
                         false);
     }
-
+    /**
+     * Handles a ModalInteractionEvent related to the Blackjack game.
+     *
+     * @param event The ModalInteractionEvent.
+     */
     @Override
     public void onModalInteraction(@NotNull ModalInteractionEvent event) {
         String userId = event.getModalId().split(":")[1];
@@ -114,15 +131,34 @@ public class BlackjackGameCommand implements SlashCommandHandler, ButtonHandler,
         }
     }
 
+    /**
+     * // Helper method for checking bets
+     *
+     * @param bet
+     * @param player
+     * @return
+     */
+    // Helper method for checking bets
     private boolean checkBets(double bet, Player player) {
         if (player.getBalance() < bet || bet <= 0) return false;
         return true;
     }
 
+    /**
+     * Helper method for checking game configuration
+     *
+     * @param gameId
+     * @param isJoin
+     * @return
+     */
     private boolean checkGameConfig(ObjectId gameId, boolean isJoin) {
         return blackjackController.checkConfig(gameId, isJoin);
     }
-
+    /**
+     * Handles a ButtonInteractionEvent related to the Blackjack game.
+     *
+     * @param event The ButtonInteractionEvent.
+     */
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         User user = event.getUser();
@@ -157,13 +193,23 @@ public class BlackjackGameCommand implements SlashCommandHandler, ButtonHandler,
                         .build();
         event.replyModal(modal).queue();
     }
-
+    /**
+     * Handles a SlashCommandInteractionEvent related to the Blackjack game.
+     *
+     * @param event The SlashCommandInteractionEvent.
+     */
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
         log.info("blackjack");
         event.reply(createStartGameMessageBuilder(event).build()).queue();
     }
 
+    /**
+     * Helper method for creating the start game message builder
+     *
+     * @param event
+     * @return
+     */
     private MessageCreateBuilder createStartGameMessageBuilder(
             @Nonnull SlashCommandInteractionEvent event) {
         User gameStarter = event.getUser();

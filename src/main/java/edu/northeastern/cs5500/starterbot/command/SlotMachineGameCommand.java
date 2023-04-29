@@ -27,6 +27,11 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * The SlotMachineGameCommand class is responsible for handling slash commands, button interactions,
+ * and modals related to starting and playing a slot machine game. It implements the
+ * SlashCommandHandler, ButtonHandler, and ModalHandler interfaces to handle these events.
+ */
 public class SlotMachineGameCommand implements SlashCommandHandler, ButtonHandler, ModalHandler {
 
     @Inject SlotMachineController slotMachineController;
@@ -34,7 +39,11 @@ public class SlotMachineGameCommand implements SlashCommandHandler, ButtonHandle
 
     @Inject
     public SlotMachineGameCommand() {}
-
+    /**
+     * Handles button interactions by displaying a modal for the user to enter their bet amount.
+     *
+     * @param event the ButtonInteractionEvent that triggered the method
+     */
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         User user = event.getUser();
@@ -65,7 +74,11 @@ public class SlotMachineGameCommand implements SlashCommandHandler, ButtonHandle
                         .build();
         event.replyModal(modal).queue();
     }
-
+    /**
+     * Handles modal interactions by retrieving the user's bet amount and starting the game.
+     *
+     * @param event the ModalInteractionEvent that triggered the method
+     */
     @Override
     public void onModalInteraction(@NotNull ModalInteractionEvent event) {
         String userId = event.getModalId().split(":")[1];
@@ -82,13 +95,21 @@ public class SlotMachineGameCommand implements SlashCommandHandler, ButtonHandle
             slotMachineController.startGame(gameId, bet, event);
         }
     }
-
+    /**
+     * Returns the name of the slot machine game command.
+     *
+     * @return the name of the command as a String
+     */
     @NotNull
     @Override
     public String getName() {
         return Constant.SLOTMACHINE_GAME_NAME.toLowerCase();
     }
-
+    /**
+     * Returns the CommandData for the slot machine game command.
+     *
+     * @return the CommandData for the command
+     */
     @NotNull
     @Override
     public CommandData getCommandData() {
@@ -96,17 +117,32 @@ public class SlotMachineGameCommand implements SlashCommandHandler, ButtonHandle
         Objects.requireNonNull(name);
         return Commands.slash(name, "start a slot machine game!");
     }
-
+    /**
+     * Handles slash command interactions by creating and sending a message to start the game.
+     *
+     * @param event the SlashCommandInteractionEvent that triggered the method
+     */
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         event.reply(createStartGameMessageBuilder(event).build()).setEphemeral(true).queue();
     }
-
+    /**
+     * Checks if the user's bet is legal.
+     *
+     * @param bet the bet amount as a double
+     * @param player the Player object representing the user
+     * @return true if the bet is legal, false otherwise
+     */
     private boolean checkBets(double bet, Player player) {
         if (player.getBalance() < bet || bet <= 0) return false;
         return true;
     }
-
+    /**
+     * Creates a message builder for starting the game.
+     *
+     * @param event the SlashCommandInteractionEvent that triggered the method
+     * @return the MessageCreateBuilder for the start game message
+     */
     private MessageCreateBuilder createStartGameMessageBuilder(
             @Nonnull SlashCommandInteractionEvent event) {
         String gameName = Constant.SLOTMACHINE_GAME_NAME;
