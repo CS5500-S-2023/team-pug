@@ -20,46 +20,6 @@ import edu.northeastern.cs5500.starterbot.model.Player;
  */
 @Module
 public class RepositoryModule {
-    // NOTE: You can use the following lines if you'd like to store objects in
-    // memory.
-    // NOTE: The presence of commented-out code in your project *will* result in a
-    // lowered grade.
-
-    // /**
-    // * Provides an instance of a repository for storing player information.
-    // *
-    // * @param repository the in-memory repository instance to be used
-    // * @return a generic repository for player information
-    // */
-    // @Provides
-    // public GenericRepository<Player> providePlayerRepository(
-    // InMemoryRepository<Player> repository) {
-    // return repository;
-    // }
-
-    // /**
-    // * Provides an instance of a repository for storing Blackjack game data.
-    // *
-    // * @param repository the in-memory repository instance to be used
-    // * @return a generic repository for Blackjack game data
-    // */
-    // @Provides
-    // public GenericRepository<BlackjackGame> provideBlackjackRepository(
-    // InMemoryRepository<BlackjackGame> repository) {
-    // return repository;
-    // }
-
-    // /**
-    // * Provides an instance of a repository for storing slot machine game data.
-    // *
-    // * @param repository the in-memory repository instance to be used
-    // * @return a generic repository for slot machine game data
-    // */
-    // @Provides
-    // public GenericRepository<SlotMachineGame> provideSlotMachineRepository(
-    // InMemoryRepository<SlotMachineGame> repository) {
-    // return repository;
-    // }
 
     @Provides
     public GenericRepository<Player> providePlayerRepository(MongoDBRepository<Player> repository) {
@@ -92,15 +52,4 @@ public class RepositoryModule {
     public Class<BlackjackGame> provideBlackjack() {
         return BlackjackGame.class;
     }
-
-    // @Provides
-    // public GenericRepository<UserPreference> provideUserPreferencesRepository(
-    // MongoDBRepository<UserPreference> repository) {
-    // return repository;
-    // }
-
-    // @Provides
-    // public Class<UserPreference> provideUserPreference() {
-    // return UserPreference.class;
-    // }
 }

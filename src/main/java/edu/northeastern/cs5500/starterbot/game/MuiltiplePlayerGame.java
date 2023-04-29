@@ -102,10 +102,4 @@ public abstract class MuiltiplePlayerGame<T extends IPlayer> extends Game<T> {
             currentIndex = (currentIndex + 1) % players.size();
         return players.get(currentIndex);
     }
-
-    /**
-     * Returns the current player in the rotation.
-     *
-     * @return the current player.
-     */
 }

@@ -3,6 +3,7 @@ package edu.northeastern.cs5500.starterbot.view;
 import static edu.northeastern.cs5500.starterbot.util.Constant.SLOTMACHINE_GAME_NAME;
 
 import java.awt.Color;
+import java.util.Objects;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -22,6 +23,8 @@ public class SlotMachineView {
      * @param gameId the ObjectId of the game instance.
      * @return a MessageCreateBuilder with the game title, description, and action buttons.
      */
+    private SlotMachineView() {}
+
     public static MessageCreateBuilder createSlotMachineMessageBuilder(User user, ObjectId gameId) {
         String id = gameId.toString();
         String userId = user.getId();
@@ -47,7 +50,9 @@ public class SlotMachineView {
     public static MessageCreateBuilder createSlotMachineResultMessageBuilder(
             User user, Double balance) {
         EmbedBuilder embedBuilder = new EmbedBuilder().setTitle(SLOTMACHINE_GAME_NAME + " Result");
-        embedBuilder.addField(user.getName(), String.valueOf(balance), true);
+        String bal = String.valueOf(balance);
+        Objects.requireNonNull(bal);
+        embedBuilder.addField(user.getName(), bal, true);
         return new MessageCreateBuilder().addEmbeds(embedBuilder.build());
     }
 }

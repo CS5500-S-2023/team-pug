@@ -61,12 +61,9 @@ public class SlotMachineGame extends IndividualGame<SlotMachinePlayer> {
      */
     private double sumPayouts(String[] reels) {
         double bet = getCurrentPlayer().getBet();
-        System.out.println(bet);
-        // Check if all the reels have the same symbol
         if (reels[0].equals(reels[1]) && reels[1].equals(reels[2])) {
-            // Multiply the payout by the player's bet
             return SYMBOLS.get(reels[0]) * bet;
         }
-        return -bet; // No winnings if the symbols don't match
+        return -bet;
     }
 }

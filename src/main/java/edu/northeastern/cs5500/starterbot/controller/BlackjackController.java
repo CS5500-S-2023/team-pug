@@ -70,8 +70,8 @@ public class BlackjackController {
         BlackjackPlayer normalPlayerayer = new BlackjackPlayer(user.getId());
         normalPlayerayer.setBet(bet);
         blackjackGame.joinPlayer(normalPlayerayer);
-        System.out.println(blackjackGame.getPlayers().size());
         blackjackRepository.update(blackjackGame);
+        Objects.requireNonNull(event);
         sendMessage(event, user.getAsMention() + ": joined");
     }
 
@@ -111,16 +111,18 @@ public class BlackjackController {
                 blackjackRepository.update(blackjackGame);
                 event.reply("You bet $" + bet.toString()).setEphemeral(true).queue(null, null);
             }
+            default -> {}
         }
         // move to the next player
         if (!blackjackGame.isEndOfRound()) {
             BlackjackPlayer blackjackPlayer = blackjackGame.nextPlayer();
             blackjackRepository.update(blackjackGame);
+            String discordId = blackjackPlayer.getDiscordId();
+            Objects.requireNonNull(discordId);
             event.getJDA()
-                    .retrieveUserById(blackjackPlayer.getDiscordId())
+                    .retrieveUserById(discordId)
                     .queue(
                             user -> {
-                                System.out.println(user.getName());
                                 sendMessage(
                                         event,
                                         BlackjackView.createBlackjackMessageBuilder(user, gameId)
@@ -135,7 +137,9 @@ public class BlackjackController {
                 sendMessage(
                         event,
                         BlackjackView.createBlackjackResultMessageBuilder(results, event).build());
-                blackjackRepository.delete(blackjackGame.getId());
+                ObjectId gameId1 = blackjackGame.getId();
+                Objects.requireNonNull(gameId1);
+                blackjackRepository.delete(gameId1);
                 return;
             }
             int continuePlayerSize = 0;
@@ -150,17 +154,20 @@ public class BlackjackController {
                 sendMessage(
                         event,
                         BlackjackView.createBlackjackResultMessageBuilder(results, event).build());
-                blackjackRepository.delete(blackjackGame.getId());
+                ObjectId gameId1 = blackjackGame.getId();
+                Objects.requireNonNull(gameId1);
+                blackjackRepository.delete(gameId1);
                 return;
             }
             // continue
             BlackjackPlayer blackjackPlayer = blackjackGame.nextPlayer();
             blackjackRepository.update(blackjackGame);
+            String discordId = blackjackPlayer.getDiscordId();
+            Objects.requireNonNull(discordId);
             event.getJDA()
-                    .retrieveUserById(blackjackPlayer.getDiscordId())
+                    .retrieveUserById(discordId)
                     .queue(
                             user -> {
-                                System.out.println(user.getName());
                                 sendMessage(
                                         event,
                                         BlackjackView.createBlackjackMessageBuilder(user, gameId)
@@ -235,6 +242,7 @@ public class BlackjackController {
 
     public boolean containsUserId(ObjectId gameID, User user) {
         BlackjackGame blackjackGame = getGameFromObjectId(gameID);
+        Objects.requireNonNull(blackjackGame);
         if (blackjackGame.containsId(user.getId())) {
             return true;
         }

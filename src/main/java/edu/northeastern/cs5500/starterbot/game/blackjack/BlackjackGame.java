@@ -108,19 +108,17 @@ public class BlackjackGame extends MuiltiplePlayerGame<BlackjackPlayer> {
         List<Result> gameResults = new ArrayList<>();
         for (BlackjackPlayer player : players) {
             if (player.getHand().getCurrentValue() == maxValue) {
-                gameResults.add(
-                        new Result(
-                                player.getDiscordId(),
-                                player.getBet()
-                                        + player.getBet() / winnerTotalBets * sharedTotalBets));
+                if (winnerTotalBets != 0.0) {
+                    gameResults.add(
+                            new Result(
+                                    player.getDiscordId(),
+                                    player.getBet()
+                                            + player.getBet() / winnerTotalBets * sharedTotalBets));
+                }
             } else {
                 gameResults.add(new Result(player.getDiscordId(), -player.getBet()));
             }
         }
         return gameResults;
     }
-
-    // public BlackjackPlayer getCurrentPlayer() {
-    // return players.get(currentIndex);
-    // }
 }
