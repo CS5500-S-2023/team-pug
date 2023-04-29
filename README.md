@@ -17,13 +17,12 @@ $MONGODB_URI is used when testing on mongodb
 
 [Google Docs](https://drive.google.com/drive/folders/1Sb4mv6rfyATztPkXO2RDzcPIX0hZvpP9)
 
-## Resources
 
-[JDA](https://github.com/DV8FromTheWorld/JDA)
+## Link to join the server
 
-[Dagger](https://dagger.dev/tutorial)
+[Invite Link](https://discord.gg/sXE9UMzT)
 
-[Discord Docs](https://discord.com/developers/docs/intro)
+## Presentation
 
 [Youtube presentation link](https://youtu.be/gzjEnNnoCMM)
 
@@ -36,10 +35,18 @@ Branch Coverage:44%
 ## Operational documentation
 Open discord, and go the target server, interact with the bot using below commands
 
-/info
+- /info
 
-/blackjack
+- /blackjack
 
-/slotmachine
+- /slotmachine
 
-/set_name
+- /set_name
+
+## Resources
+
+[JDA](https://github.com/DV8FromTheWorld/JDA)
+
+[Dagger](https://dagger.dev/tutorial)
+
+[Discord Docs](https://discord.com/developers/docs/intro)
