@@ -24,3 +24,5 @@ $MONGODB_URI is used when testing on mongodb
 [Dagger](https://dagger.dev/tutorial)
 
 [Discord Docs](https://discord.com/developers/docs/intro)
+
+[Youtube presentation link](https://youtu.be/gzjEnNnoCMM)
